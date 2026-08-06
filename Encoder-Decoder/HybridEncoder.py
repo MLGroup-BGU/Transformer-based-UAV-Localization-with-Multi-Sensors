@@ -57,9 +57,7 @@ class HybridSpatiotemporalPredictor(nn.Module):
 
         self.temporal_pos_encoder = PositionalEncoding1D(d_model=d_model, max_len=100)
         
-        # Because we are predicting sequence-to-sequence autoregressively, 
-        # we configure this identically to the original TransformerDecoder Predictor 
-        # (Using a Transformer Decoder layer with a causal mask)
+        # Configure autoregressive decoder layer with causal mask
         decoder_layer = nn.TransformerDecoderLayer(
             d_model=d_model, nhead=nhead, dim_feedforward=dim_feedforward, 
             dropout=dropout, batch_first=True

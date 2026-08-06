@@ -97,7 +97,7 @@ class LSTMDecoder(nn.Module):
         # Project encoder output to hidden_size if they differ
         self.input_proj = nn.Linear(input_size, hidden_size) if input_size != hidden_size else nn.Identity()
         
-        # The LSTM layer replaces the Transformer layers
+        # LSTM decoder layer
         self.lstm = nn.LSTM(
             input_size=hidden_size,
             hidden_size=hidden_size,

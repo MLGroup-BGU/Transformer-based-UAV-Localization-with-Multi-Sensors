@@ -1,0 +1,13 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+Data/*.csv
+# Generated prediction output files (not committed)
+Encoder-Decoder/predicted_uav_trajectories.csv
+Encoder-Decoder/predicted_uav_trajectories_all.csv
+Encoder-Decoder/experiments_summary.csv
+
+# OS
+.DS_Store
+Thumbs.db
