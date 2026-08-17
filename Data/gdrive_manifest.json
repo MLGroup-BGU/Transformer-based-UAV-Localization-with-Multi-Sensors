@@ -1,0 +1,1402 @@
+[
+  {
+    "id": "10Nc-H9MMyYhbzIXUzW4M4rNh7-08mNGb",
+    "path": "5K_0\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_0\\drone_information.csv"
+  },
+  {
+    "id": "139F8ZJIHmjgV8gpaSWUH1xYok-UP6_SC",
+    "path": "5K_0\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_0\\drone_trajectories.csv"
+  },
+  {
+    "id": "1wt_e1pr7s8eifhJmPwhaGDHeGrInaJzM",
+    "path": "5K_0\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_0\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "19aYGpOLGy2YcHRcnyArDkwcV7o0LY_ds",
+    "path": "5K_0\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_0\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1svtby2IX21A9ffdliogsFovDFo1ZY6QP",
+    "path": "5K_0\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_0\\sensor_distances.csv"
+  },
+  {
+    "id": "1KgGLxpYuUSEIHnUXpTtF8I6rolquTuGH",
+    "path": "5K_0\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_0\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1sWd1e26QtOF3hhdLNk8ZG_T7BPM656l8",
+    "path": "5K_0\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_0\\sensor_information.csv"
+  },
+  {
+    "id": "1aWbCQr_EOxUcF1mxCeLG19_c6bx0MIar",
+    "path": "5K_1\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_1\\drone_information.csv"
+  },
+  {
+    "id": "1FBH0lYzmx2TahwXztlZNPVbDqAa2WijT",
+    "path": "5K_1\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_1\\drone_trajectories.csv"
+  },
+  {
+    "id": "1lMUYRHrM13Adp6Z1aa4Y-46EUsVQgR3G",
+    "path": "5K_1\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_1\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1OUKl_N_8APcn7wKyNU6sS8civa-Cx6VC",
+    "path": "5K_1\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_1\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1G4HjLz_0yzTo7c7kkgiblezwifgA7Sy7",
+    "path": "5K_1\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_1\\sensor_distances.csv"
+  },
+  {
+    "id": "11uajBwp1CiajRCf2dJIJ95YV2spTwbZs",
+    "path": "5K_1\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_1\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "19ekTWhdpCJ_7uTI1yKYYB52JcLnqh97b",
+    "path": "5K_1\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_1\\sensor_information.csv"
+  },
+  {
+    "id": "1AavzHd0OqLMmYAZDXqhuhk4WBfQeg8aZ",
+    "path": "5K_10\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_10\\drone_information.csv"
+  },
+  {
+    "id": "1Au6IkOwNdabxTJLO-GbhHHbE9SMABoyP",
+    "path": "5K_10\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_10\\drone_trajectories.csv"
+  },
+  {
+    "id": "1M3H2a7h7XiJ7ZFi6KpvuBlgXoxgTIAXJ",
+    "path": "5K_10\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_10\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1w9VrLhff3KmZfeK6dnv80X06x-ngJddF",
+    "path": "5K_10\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_10\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1PIobCUNxOQKThGndExx6OCRAjps2g_tD",
+    "path": "5K_10\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_10\\sensor_distances.csv"
+  },
+  {
+    "id": "1rkQ99T21gOkjpj3JN9XuEH8DfKf35d5V",
+    "path": "5K_10\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_10\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "16PLM_9-QrmTlHw2ilK8oCJixW5ceQNC3",
+    "path": "5K_10\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_10\\sensor_information.csv"
+  },
+  {
+    "id": "1OtzP9eoPBwxziZnmrbBLhEpAImb89DAC",
+    "path": "5K_11\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_11\\drone_information.csv"
+  },
+  {
+    "id": "1hh3I9vmDQmAt0vBlZ6twyURDZPCLqy3p",
+    "path": "5K_11\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_11\\drone_trajectories.csv"
+  },
+  {
+    "id": "1EaV7WeRP8KGWZG1ldbToD3oj5ZIg7zl9",
+    "path": "5K_11\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_11\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1FQpPqoM7J35Xkr2_ytoNgFkfFvFXBqWV",
+    "path": "5K_11\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_11\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1e4biiqvpHk1gvVKyiGYavUnpN5i6ajcJ",
+    "path": "5K_11\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_11\\sensor_distances.csv"
+  },
+  {
+    "id": "1aySsDybO6Mr-iw0ghwot3vUq2J-nONci",
+    "path": "5K_11\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_11\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "14TeD2tjo3YDEkWuHQS41oYg1d5loPaVr",
+    "path": "5K_11\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_11\\sensor_information.csv"
+  },
+  {
+    "id": "1_9sVpA8frU0FTuHarjXoV3TBIZZy8Lsa",
+    "path": "5K_12\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_12\\drone_information.csv"
+  },
+  {
+    "id": "1ZCkudrH9kUvf9cTMCTwqxi6hrkh28GWw",
+    "path": "5K_12\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_12\\drone_trajectories.csv"
+  },
+  {
+    "id": "1eT4rTni0lLXqe5BrBSeBWbqkm-SfdgLw",
+    "path": "5K_12\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_12\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1x57i7k5HbLPgesfxeUfW8UhRTuwYUS7S",
+    "path": "5K_12\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_12\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1BhZ8xysHw-f54QsNKJTeM6Kld0py4QjS",
+    "path": "5K_12\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_12\\sensor_distances.csv"
+  },
+  {
+    "id": "1sWAuwga_5KxylcS-xhqhoPxZuF16tWZk",
+    "path": "5K_12\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_12\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1XrCzFKZSodaWV6V996e-cXAe-rnQuzrx",
+    "path": "5K_12\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_12\\sensor_information.csv"
+  },
+  {
+    "id": "1vSjEbPReVskjzpporJFA8pgZ8QvssSKn",
+    "path": "5K_13\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_13\\drone_information.csv"
+  },
+  {
+    "id": "1SiyPJMAQW2Iywe-2a9TMAj1M-3TnVixS",
+    "path": "5K_13\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_13\\drone_trajectories.csv"
+  },
+  {
+    "id": "1wcD8oL6gGO810cMb64fGCJrO7VoczOGv",
+    "path": "5K_13\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_13\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1Yum7_0FmRW6DTsFhziiMwepPPMN1IJ7u",
+    "path": "5K_13\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_13\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1R7RdHlqsAXmz84GW_eum6DWLKt13rZ-4",
+    "path": "5K_13\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_13\\sensor_distances.csv"
+  },
+  {
+    "id": "1a2DupF0UhVk1rITa0-v_37BPTQnl4yDe",
+    "path": "5K_13\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_13\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1dG0Z_9fqKRUk5d95PBHGkj1Lg26fQoxZ",
+    "path": "5K_13\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_13\\sensor_information.csv"
+  },
+  {
+    "id": "14JOCPbsV-YKXTOeZyIyIvKwSIutVxaGj",
+    "path": "5K_14\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_14\\drone_information.csv"
+  },
+  {
+    "id": "1qysUERDLH9A9rRVb17F7XsffXj2f0e5w",
+    "path": "5K_14\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_14\\drone_trajectories.csv"
+  },
+  {
+    "id": "1jSF3bLVzUXJSJUBwX1kyHfkg7O-MhTlX",
+    "path": "5K_14\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_14\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1Wi9GI97Sk0eWMuxSyInFzwVi34dZdg0O",
+    "path": "5K_14\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_14\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1qJv-fQXapcoXFFaoAZlIRRoBLMc12pdU",
+    "path": "5K_14\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_14\\sensor_distances.csv"
+  },
+  {
+    "id": "1HP358VmYDr_a7sXZ6Ltw3gYOFjVSSE12",
+    "path": "5K_14\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_14\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1sr7XyXqgWPLynBXPY7p81JvvrFlFzI6O",
+    "path": "5K_14\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_14\\sensor_information.csv"
+  },
+  {
+    "id": "1KCHg7YVXCOiTwRxpR06lDLTTQ3NdzmuV",
+    "path": "5K_15\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_15\\drone_information.csv"
+  },
+  {
+    "id": "1yNuCJgWcWmfqKcuuMPdNqIMKcprJSzum",
+    "path": "5K_15\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_15\\drone_trajectories.csv"
+  },
+  {
+    "id": "1QNwlr8t-SMID7wbvBnbL3q9Zen4oL0Kq",
+    "path": "5K_15\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_15\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1L8lMy5YuzwiTHq8EXihZ63XB1mPp0Pjg",
+    "path": "5K_15\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_15\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1df7qhQ38VDX_NWk_06sodwmMHmPytBgq",
+    "path": "5K_15\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_15\\sensor_distances.csv"
+  },
+  {
+    "id": "1UOLwR7iIMNPcy_r_al2wpfvAy3xdgvbp",
+    "path": "5K_15\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_15\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1QhsKlETwPzMI45-nh0t7vwLfVxsvvF0L",
+    "path": "5K_15\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_15\\sensor_information.csv"
+  },
+  {
+    "id": "1W3IvyRqlmUFDPwl-clmbDTqItkr9R7w_",
+    "path": "5K_16\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_16\\drone_information.csv"
+  },
+  {
+    "id": "19sl1nceQxmVReJqoT16w_9jv2IVdHFHj",
+    "path": "5K_16\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_16\\drone_trajectories.csv"
+  },
+  {
+    "id": "1q2Iv32kHJ0XnXBoWy5Fnj_KwsoUlb4n5",
+    "path": "5K_16\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_16\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1HD7_TeZ7RePBPs7R82AjCBxIG90SMX25",
+    "path": "5K_16\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_16\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1KNrz5zZXq5DMGAA4nBzxIWuvJVMsBXH2",
+    "path": "5K_16\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_16\\sensor_distances.csv"
+  },
+  {
+    "id": "1_5EWyEtEIJv9Wo7mun7kddaGttA9NuZv",
+    "path": "5K_16\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_16\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1NHmrIiysYY6chgPLiFcpD5xaD_15dYUk",
+    "path": "5K_16\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_16\\sensor_information.csv"
+  },
+  {
+    "id": "1TZ21yxopTGWSwANBcc7RWU22YUxb5SCZ",
+    "path": "5K_17\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_17\\drone_information.csv"
+  },
+  {
+    "id": "1maKCpW9_n7kjCY4kDXZGdCbEzPzrbkQy",
+    "path": "5K_17\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_17\\drone_trajectories.csv"
+  },
+  {
+    "id": "1BZiV4TrX2viPpu890XXGq1Aka4eog8zt",
+    "path": "5K_17\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_17\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1fIfVQ_AjtO-pGQQ6ja4sNWTNmrnMBFP-",
+    "path": "5K_17\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_17\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1G1uZGj1_EJ7SDeHMJ3wDSty-5wTrGGdj",
+    "path": "5K_17\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_17\\sensor_distances.csv"
+  },
+  {
+    "id": "1q9zhR8kyE202wg2A5K9MGscRhzRJtdO7",
+    "path": "5K_17\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_17\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1Lqld9O0uB3prhP2RvcIQTOWDuVnosQir",
+    "path": "5K_17\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_17\\sensor_information.csv"
+  },
+  {
+    "id": "1g79kBYDgrrTsmkKxxv67v6bLah0JpmtZ",
+    "path": "5K_18\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_18\\drone_information.csv"
+  },
+  {
+    "id": "1bIFP0ZalvyVqXs_Qd0pzDT2Qttbttdof",
+    "path": "5K_18\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_18\\drone_trajectories.csv"
+  },
+  {
+    "id": "1uiTNzku8ntp_XQNgQyAx9a0Dt2sG7AUN",
+    "path": "5K_18\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_18\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1ZLTJAdNR0Ja0noR5rHWF4rqr2t8oHQyo",
+    "path": "5K_18\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_18\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1e3LEYKyBkPQUQh4jfW7yFXheQYzB27TZ",
+    "path": "5K_18\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_18\\sensor_distances.csv"
+  },
+  {
+    "id": "1PwAHabGcStKEbyV3g_d3IMkcCNjwWLwK",
+    "path": "5K_18\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_18\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1FM43XtMvOFvvwhy8s4-a-QqcEhy8StFI",
+    "path": "5K_18\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_18\\sensor_information.csv"
+  },
+  {
+    "id": "1zGnK1jaRhWITVmNDj11SX4ShncG4gpov",
+    "path": "5K_19\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_19\\drone_information.csv"
+  },
+  {
+    "id": "1j-mmTh6CDnjrSkSQaDSX3mfM19X3phx8",
+    "path": "5K_19\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_19\\drone_trajectories.csv"
+  },
+  {
+    "id": "17PT90aTBM-pbjCGXA7miALDV5XP_3kpH",
+    "path": "5K_19\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_19\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "12b3HAR38tt9C1NSIHd93foq0K_aUqTIE",
+    "path": "5K_19\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_19\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1H1MftPna_mhenFciQdmA0cdq7iRQqbU6",
+    "path": "5K_19\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_19\\sensor_distances.csv"
+  },
+  {
+    "id": "1xvP44IC0unCRLaemCKviAfk7KfR-DhQT",
+    "path": "5K_19\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_19\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1_kgr5YRQcfDwcOtwV8Jx4u2FA53FpqBg",
+    "path": "5K_19\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_19\\sensor_information.csv"
+  },
+  {
+    "id": "1BmVyZMbKv_PWlfBGszgZ-vO-aUXsMFeO",
+    "path": "5K_2\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_2\\drone_information.csv"
+  },
+  {
+    "id": "143nI1tKDt05vvaFILixcVgBOwi-2U4rN",
+    "path": "5K_2\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_2\\drone_trajectories.csv"
+  },
+  {
+    "id": "16S0pl46uyns7e19C9J0x8Q-fUE9d6l46",
+    "path": "5K_2\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_2\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1Dfn26i8oAVYP9aY8n_KKZltlRem0a7KF",
+    "path": "5K_2\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_2\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1jMpLYoxSUJSEUpT8zHXsfm2MAHl0LIlF",
+    "path": "5K_2\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_2\\sensor_distances.csv"
+  },
+  {
+    "id": "1u9TJuDZzNlXYgR6CpT6Zld2l2OBkusEn",
+    "path": "5K_2\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_2\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1VzaI5r_t1DFtyzVrWmomfkozwbaL7beD",
+    "path": "5K_2\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_2\\sensor_information.csv"
+  },
+  {
+    "id": "1nRu1TUhvg0sD03_8DbgrkvbyDOqX6MqF",
+    "path": "5K_20\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_20\\drone_information.csv"
+  },
+  {
+    "id": "19hJRcedc_Z-eB1Iy93ju80ZNUgvfuzto",
+    "path": "5K_20\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_20\\drone_trajectories.csv"
+  },
+  {
+    "id": "1EKuYebXHoBag2N8lBswPxdm8gULyfDF1",
+    "path": "5K_20\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_20\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1gFIFuFiWWC3PFHDKz4hq0uU_fpgBaMb9",
+    "path": "5K_20\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_20\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1VQKkHInzf58H80z5qx3QF3xH_EZ1Yiy2",
+    "path": "5K_20\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_20\\sensor_distances.csv"
+  },
+  {
+    "id": "1SZi2fm7pszuw2d4jXqbtcXqpppfZGGY6",
+    "path": "5K_20\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_20\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1VLVDYgquzj_IdQu24GISAq1rzX9eOqSo",
+    "path": "5K_20\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_20\\sensor_information.csv"
+  },
+  {
+    "id": "1iiW0wHB-K8G8eI69Vpq9eDycxptf8oQL",
+    "path": "5K_21\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_21\\drone_information.csv"
+  },
+  {
+    "id": "1w10G86vrYC9jQPkelSMp6_vrBdX_n8MN",
+    "path": "5K_21\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_21\\drone_trajectories.csv"
+  },
+  {
+    "id": "1nGGrznSYbd8rM9BmFMk9XjGiE_PbdE4c",
+    "path": "5K_21\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_21\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1TC2VMg2qGhOzOey17Sqehz9u2TeBu-Rj",
+    "path": "5K_21\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_21\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "121sQQUXjIyvdG_co7MdIgBlx0wZtNsRB",
+    "path": "5K_21\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_21\\sensor_distances.csv"
+  },
+  {
+    "id": "1iFqnplw3-P2AKpNW9gnaaFw04nLpLwH5",
+    "path": "5K_21\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_21\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1yPsM6jxZRDI3Yfxit_6rmnVZSwRCjoyL",
+    "path": "5K_21\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_21\\sensor_information.csv"
+  },
+  {
+    "id": "1EhjiRaDT_inaneU11mFJqsjIV6MlNY_f",
+    "path": "5K_22\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_22\\drone_information.csv"
+  },
+  {
+    "id": "1DBh1G6oHtt8Y7gC9Ref5FBLBxsdyI14Q",
+    "path": "5K_22\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_22\\drone_trajectories.csv"
+  },
+  {
+    "id": "1BXX9sWlBVW37Com0vxsKwFB0iuKzx6Rf",
+    "path": "5K_22\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_22\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1h3nnewidHHWiMaGwj0TRU8WYy79wlEUr",
+    "path": "5K_22\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_22\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1Gn5Y0IoAb0VdpmDCtdAnIzwNEWDoheye",
+    "path": "5K_22\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_22\\sensor_distances.csv"
+  },
+  {
+    "id": "1lVw6nLkI5s4_5SP_DDfgYYWWPg6iazm0",
+    "path": "5K_22\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_22\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1WBWDsPglGgiRzjZecgErTV3mwSwjbZ9Y",
+    "path": "5K_22\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_22\\sensor_information.csv"
+  },
+  {
+    "id": "1woebskP0ND6dg76bbMfW3jOadVcu5EHl",
+    "path": "5K_23\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_23\\drone_information.csv"
+  },
+  {
+    "id": "1VLaySKd_W37vhAHkH8BVr_BJZ4CfiHtw",
+    "path": "5K_23\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_23\\drone_trajectories.csv"
+  },
+  {
+    "id": "1PVivfpXF4Tk-yWV4JSOGOhZJ3WtOo9XP",
+    "path": "5K_23\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_23\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1Ho2LUrsapc2w5gKLz9_IzSVxGRRMsPoG",
+    "path": "5K_23\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_23\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1LEXtaJUXr8Frc0chPmUOdBE3mw4KJ9wW",
+    "path": "5K_23\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_23\\sensor_distances.csv"
+  },
+  {
+    "id": "14EoqZzDqz7yggkr-4Aw62QKFxu61wZ2R",
+    "path": "5K_23\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_23\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1sveMHoaV5neFx9jjZ9hWyNpcWwd6jdNv",
+    "path": "5K_23\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_23\\sensor_information.csv"
+  },
+  {
+    "id": "1gCN0IFaIn-n7o1S0rspb57wG00qWNV-_",
+    "path": "5K_24\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_24\\drone_information.csv"
+  },
+  {
+    "id": "14egNTrGCuNaFkP4l1GLjeT7qMb_SvH7M",
+    "path": "5K_24\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_24\\drone_trajectories.csv"
+  },
+  {
+    "id": "1hiosSdzSqD_8T1pbxVl6SRUJGHf5BL8w",
+    "path": "5K_24\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_24\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1eEyZQEk_lJhAXyUggHjk1B5uv7cVO3H1",
+    "path": "5K_24\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_24\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1D5MiUg97N3NivzNiNgUuXCBcyFliM1tI",
+    "path": "5K_24\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_24\\sensor_distances.csv"
+  },
+  {
+    "id": "1ZWNr6--ui5wFKPt2EbKBfT2zBBv80q7H",
+    "path": "5K_24\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_24\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "17qE_wP-CGp_HMHYmMOLeYaDWue-QPsa_",
+    "path": "5K_24\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_24\\sensor_information.csv"
+  },
+  {
+    "id": "10q6gAbCc34DCefa9mAWmer-2rH1-yRJ6",
+    "path": "5K_25\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_25\\drone_information.csv"
+  },
+  {
+    "id": "1OYqw7RhHzGZkfQ_5k2itNpMuWYYKnTNB",
+    "path": "5K_25\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_25\\drone_trajectories.csv"
+  },
+  {
+    "id": "1iXWIWd-0GVvWfX9e3SEdFLWFapMyT76_",
+    "path": "5K_25\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_25\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "14Mi81NcsMxC3gsSjOI9dSK7IW79VDFNl",
+    "path": "5K_25\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_25\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1EWcB5CfPR5SQf3BgQavhXrCGNyOLZC5P",
+    "path": "5K_25\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_25\\sensor_distances.csv"
+  },
+  {
+    "id": "1uwGQ-Z_EN46EJP5LoXZUVEdMJKoUIRAx",
+    "path": "5K_25\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_25\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1u9jVqOpH0uipoEcesD_QjG8PJs_yS-T5",
+    "path": "5K_25\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_25\\sensor_information.csv"
+  },
+  {
+    "id": "1j_g6ia17qdGMoRl9iEPQffaJsLxhupXh",
+    "path": "5K_26\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_26\\drone_information.csv"
+  },
+  {
+    "id": "1RpgJifcnYOH_EaeNAGoT6vvcGSbV6eN3",
+    "path": "5K_26\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_26\\drone_trajectories.csv"
+  },
+  {
+    "id": "1W49IJFJ9dxYYGT_9JZ3rpESJZqE_n5tY",
+    "path": "5K_26\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_26\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1yUG9a2CHN9GpVhSeR4Gi2Fpl74oAey_D",
+    "path": "5K_26\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_26\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1vl3z-YxaqqW94UarMUUhg4y1CyHgtDxp",
+    "path": "5K_26\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_26\\sensor_distances.csv"
+  },
+  {
+    "id": "1Ds5-2ZjwkEHn94t4KcenLMwbf_bGRNAb",
+    "path": "5K_26\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_26\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1x05N7k9b-K0GKwLNCIrd5dWlPp4WlBg0",
+    "path": "5K_26\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_26\\sensor_information.csv"
+  },
+  {
+    "id": "1N_-TnN7BmaIPhnXXpxMLrInLhmQ4kwbL",
+    "path": "5K_27\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_27\\drone_information.csv"
+  },
+  {
+    "id": "1VM3h0fpymrBXxxH4GzNy85tpLUnfalze",
+    "path": "5K_27\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_27\\drone_trajectories.csv"
+  },
+  {
+    "id": "1IPmX7FQ3PtXmqlDJxST69ZJf_D9MsDHZ",
+    "path": "5K_27\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_27\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1r2ACYfZSPxr2Hk4EsJZrL_M65I7KXGw0",
+    "path": "5K_27\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_27\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1PfgMAMeWjbvmrUrqbDbF6p_WcrrttonD",
+    "path": "5K_27\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_27\\sensor_distances.csv"
+  },
+  {
+    "id": "155nnqmdvnsKY2ErQm-b7RNvmDVIMHpwT",
+    "path": "5K_27\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_27\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1gXsGiXggXE9_USnIihg6gqMpqz7w__OT",
+    "path": "5K_27\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_27\\sensor_information.csv"
+  },
+  {
+    "id": "1QrM_UlpV-GAVLkm3cwnQ3JfOzNwSP4x7",
+    "path": "5K_28\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_28\\drone_information.csv"
+  },
+  {
+    "id": "1YfjuN-_SHj28LFQoBiROMZEdNF_jKlIv",
+    "path": "5K_28\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_28\\drone_trajectories.csv"
+  },
+  {
+    "id": "1RS2YyVORS85pBYjlrAlH-r6E0rzSpr0u",
+    "path": "5K_28\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_28\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1Jm4lKLijJJbOah8a_hixlfr4W-Qegi-S",
+    "path": "5K_28\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_28\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1qCNMY5-jGU3QnATjq_NhsfiXZlANbpoe",
+    "path": "5K_28\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_28\\sensor_distances.csv"
+  },
+  {
+    "id": "13cTwyazUV-UIaSSrixyiazUINrfJjf_G",
+    "path": "5K_28\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_28\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "15Qu_UHy3mPfAKOiQ2tKXjrcxMpp4gYxh",
+    "path": "5K_28\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_28\\sensor_information.csv"
+  },
+  {
+    "id": "1XIfAcLz03c_ovDFXDxJbbj7lXftP_o4n",
+    "path": "5K_29\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_29\\drone_information.csv"
+  },
+  {
+    "id": "1j3lRpPe4CbShUlL0vRxdKB9XEhqEaEBs",
+    "path": "5K_29\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_29\\drone_trajectories.csv"
+  },
+  {
+    "id": "1KbDAGZunKomhRkQ6aAlO2Kvdpj81N_EA",
+    "path": "5K_29\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_29\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1y4lJGWgLhVq2mn4I7BsnF_WoPK74reJK",
+    "path": "5K_29\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_29\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1rNtgLrcSoJ8W2Q4fGPA0N6zHsg0fRuX8",
+    "path": "5K_29\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_29\\sensor_distances.csv"
+  },
+  {
+    "id": "1I0HDNihcaWJ6HdWDnjr5zeF754-lD5qz",
+    "path": "5K_29\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_29\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1pBPycJ1jLOMy2GQohudRPpeSByWcxq0G",
+    "path": "5K_29\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_29\\sensor_information.csv"
+  },
+  {
+    "id": "1L7Kst6idUUmoSD2iAh85jjpWi7Az2Ub4",
+    "path": "5K_3\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_3\\drone_information.csv"
+  },
+  {
+    "id": "1uHDwvlky2dK4kXgL2zQTD9lWR47xD5tO",
+    "path": "5K_3\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_3\\drone_trajectories.csv"
+  },
+  {
+    "id": "1vqdv28NZF4c3rcO93b_SSoZzR0hWrmmE",
+    "path": "5K_3\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_3\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1uEfLrousQftl57MrWmmcJ7VtfZ8WdzB0",
+    "path": "5K_3\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_3\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1T-7PeWAosfz8GzTKPqpgJWC4uv_3y-zA",
+    "path": "5K_3\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_3\\sensor_distances.csv"
+  },
+  {
+    "id": "1knNEgraJfOwtL81v8MHeBs9X8IM2Rz1z",
+    "path": "5K_3\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_3\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1LrI64jVh-f832OTvyk5PTZNqw_qKM83_",
+    "path": "5K_3\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_3\\sensor_information.csv"
+  },
+  {
+    "id": "1I7-Z-Rcj7QkGUDc3u8MGHbSNRkn-blNN",
+    "path": "5K_30\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_30\\drone_information.csv"
+  },
+  {
+    "id": "1LGnJtsE64NeTSc2lbACTs5KyJRKkU5lN",
+    "path": "5K_30\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_30\\drone_trajectories.csv"
+  },
+  {
+    "id": "16q8VHvGJhS6SYdhEtt1BoIRCEU_3kgNY",
+    "path": "5K_30\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_30\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1tzR-ZMyUlG_pQnKV-NZ-Mbs0dAHykQve",
+    "path": "5K_30\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_30\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1C9_t3SMAG8uNHmTMuHYlfKV8zLvQYMuj",
+    "path": "5K_30\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_30\\sensor_distances.csv"
+  },
+  {
+    "id": "1PTIt6SB-p9DAfc05M5XqAhAScBdS_UAA",
+    "path": "5K_30\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_30\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1WYlt4EbStDECYFadPmZClrtjQGM758Dt",
+    "path": "5K_30\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_30\\sensor_information.csv"
+  },
+  {
+    "id": "1itUDxg8ps65G_4-Q_sCi7VhvVrNjXIw9",
+    "path": "5K_31\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_31\\drone_information.csv"
+  },
+  {
+    "id": "1mWnI7j_iyVjiDj7keh1ChYd4lmpeJTWM",
+    "path": "5K_31\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_31\\drone_trajectories.csv"
+  },
+  {
+    "id": "1Ts3rJgWa7LxHVt5NLjTHoeewPvmpvhSb",
+    "path": "5K_31\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_31\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1goU_Q7gQxisTADCyjqb-jTD_mxpAaIHK",
+    "path": "5K_31\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_31\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1Y8Lkff001q9qmHKbNphQ9vKAWgkcJb__",
+    "path": "5K_31\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_31\\sensor_distances.csv"
+  },
+  {
+    "id": "1PNcZetu8-fKNW4-KH2E1rvzUmZjCDYbr",
+    "path": "5K_31\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_31\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "11YR2ffViHKgMeTmph1hIM8TAIGPela70",
+    "path": "5K_31\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_31\\sensor_information.csv"
+  },
+  {
+    "id": "1PWU5PR5Oh9qXEmPmUZ-UA2rYQmC5wNRe",
+    "path": "5K_32\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_32\\drone_information.csv"
+  },
+  {
+    "id": "1FYfXA6dsC-yrPoqQDMlDWJ97a8Yhg9wA",
+    "path": "5K_32\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_32\\drone_trajectories.csv"
+  },
+  {
+    "id": "134sMDbUTlCMMDkQxQC6gLt_aWlk4ldgE",
+    "path": "5K_32\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_32\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1lB5TqjQjvIvtCHqxRuUFDLtL_JTOTBpy",
+    "path": "5K_32\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_32\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1pQKvnsIlSDNALIwvOKCwPkkrE5hLs2VI",
+    "path": "5K_32\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_32\\sensor_distances.csv"
+  },
+  {
+    "id": "1D81gBJHW-hZ6q6ltGnbHD7QK41EDrKvG",
+    "path": "5K_32\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_32\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1bfhwtz4fcQYYby3DIke8Zy4nzCekFs4Y",
+    "path": "5K_32\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_32\\sensor_information.csv"
+  },
+  {
+    "id": "1imktApBrO015WJX4LMm-SNAeL_Pq2TEN",
+    "path": "5K_33\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_33\\drone_information.csv"
+  },
+  {
+    "id": "1Dv24I5vJK179f4E4wGVOhxR5CPqHVlkJ",
+    "path": "5K_33\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_33\\drone_trajectories.csv"
+  },
+  {
+    "id": "1FfyPYX-q8qYdwVhAVUbQfWsu5OAorGEu",
+    "path": "5K_33\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_33\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1CJ7oRPIJy-52K1TSw_Cjk9VcJ0tmU7KG",
+    "path": "5K_33\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_33\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1rEHOIH7B6O_kK6bLjMYBZzVVCfu_4sh6",
+    "path": "5K_33\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_33\\sensor_distances.csv"
+  },
+  {
+    "id": "12zIzP7FTIkA_h22-5wMThBAIq-py_0uX",
+    "path": "5K_33\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_33\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1Y4qAzL9DBYYE7JucnYE6PAG53e1uIwK_",
+    "path": "5K_33\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_33\\sensor_information.csv"
+  },
+  {
+    "id": "1-oU77uPaqVySjxnl0mWGbfr9MJuKYXXE",
+    "path": "5K_34\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_34\\drone_information.csv"
+  },
+  {
+    "id": "12twQ8zlRJwY5a6ZXBiCYbmENnMy3RyIe",
+    "path": "5K_34\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_34\\drone_trajectories.csv"
+  },
+  {
+    "id": "1gMtPiPDQzicOL3-UG8FzQa_p8Q4cFcjV",
+    "path": "5K_34\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_34\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1wMH2GcQvDB7gnxXFWAU4NxIwHHf1IUMp",
+    "path": "5K_34\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_34\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1V9oFBudNE6ObAZnaD47zQ60QzG95LjFJ",
+    "path": "5K_34\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_34\\sensor_distances.csv"
+  },
+  {
+    "id": "1oWycUTyxSY0YqQe2cIE7HIBrJ_5LihN0",
+    "path": "5K_34\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_34\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1me4eyggy4Lscq6RZ6CBPSwd3xXUU9W8v",
+    "path": "5K_34\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_34\\sensor_information.csv"
+  },
+  {
+    "id": "1iL7AEm6eyqCnxe0q2GzocB5cUHPNWUD_",
+    "path": "5K_35\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_35\\drone_information.csv"
+  },
+  {
+    "id": "15nzIWsy511f_zdNpLhMGWv3v25xsnFXA",
+    "path": "5K_35\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_35\\drone_trajectories.csv"
+  },
+  {
+    "id": "1MJqnCUrFgpiA7nOYvlRDoxe0lFW2K_vk",
+    "path": "5K_35\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_35\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1HE-Rk1zMzxzrrn0Gu7bOGgrkPdCklRgP",
+    "path": "5K_35\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_35\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1evtVA0xtOo2SDJyv9TPFU5sOr13GZnEL",
+    "path": "5K_35\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_35\\sensor_distances.csv"
+  },
+  {
+    "id": "14xBmpuLCJVPHvyR6ky2jqBPyMZ1heqnX",
+    "path": "5K_35\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_35\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1teHrN3ga9ajWRY_hAPgwgVqlT87wk0x9",
+    "path": "5K_35\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_35\\sensor_information.csv"
+  },
+  {
+    "id": "1nxHDLJgiqMRS7bxp3eVFt94PEXDvkNvH",
+    "path": "5K_36\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_36\\drone_information.csv"
+  },
+  {
+    "id": "1R8NjXyqyN6SvVsTspTmGapL44rOsP7o2",
+    "path": "5K_36\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_36\\drone_trajectories.csv"
+  },
+  {
+    "id": "1PE0Fq7ua_aCi2DLQamZj9UJN1KxPNVOU",
+    "path": "5K_36\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_36\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1G_Yc6jekYW1VvGkKGWNSlDc1zMJwBVDl",
+    "path": "5K_36\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_36\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1vbK9UoQ17j0hiFR_T7_jfuUhbdfL3SWd",
+    "path": "5K_36\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_36\\sensor_distances.csv"
+  },
+  {
+    "id": "1ph7m52sv8XVUOr55iYrWCWJFJXR3_EUe",
+    "path": "5K_36\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_36\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1QU1OkLs3rAy7F4nASZe4CYFgRpq82nGh",
+    "path": "5K_36\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_36\\sensor_information.csv"
+  },
+  {
+    "id": "1EDZa7Lj7m-VdzNZt28JG7OS1_INjgh6c",
+    "path": "5K_37\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_37\\drone_information.csv"
+  },
+  {
+    "id": "1koxoRuxBwuhe22Y1c68nPIyuCtlp-vZY",
+    "path": "5K_37\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_37\\drone_trajectories.csv"
+  },
+  {
+    "id": "1mk7Q-RcsIeluWpZIJQ11RAJYLi2XEsSF",
+    "path": "5K_37\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_37\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1Stb5qL9spBYnd41GF_uraBR7wai0MugU",
+    "path": "5K_37\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_37\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1X57ah2_Q5FWIlKwT0N0yyGCd4H3awgT-",
+    "path": "5K_37\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_37\\sensor_distances.csv"
+  },
+  {
+    "id": "1MCXzF9Fd52BPObG5pM0IoUl8gntbDCO_",
+    "path": "5K_37\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_37\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1KOM2aCqHz5DZIShjauGbUNEGzRistg9E",
+    "path": "5K_37\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_37\\sensor_information.csv"
+  },
+  {
+    "id": "1v_A-XAD100hOPlWbnFPURRjCBtyabXBH",
+    "path": "5K_38\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_38\\drone_information.csv"
+  },
+  {
+    "id": "1hKbdkZPIcg8cvZ5MTgv8QeRf0sCkWJBs",
+    "path": "5K_38\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_38\\drone_trajectories.csv"
+  },
+  {
+    "id": "1R-UkZxXdwAcxBgCIVmD6Kv_IO-0n4M5G",
+    "path": "5K_38\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_38\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1tAkU5Xr9p-bwD7ZRybBoSGVj9tE1bDUV",
+    "path": "5K_38\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_38\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1Pj41ctDgrt5L8TpjCUp1xGAcR5cpR_gW",
+    "path": "5K_38\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_38\\sensor_distances.csv"
+  },
+  {
+    "id": "1Dtjz03bGAVm84eQuiWu9XzOMjC7nYe1G",
+    "path": "5K_38\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_38\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1kGxDvWYMpBjY4z4V8hxC3H_pk1NpkIUc",
+    "path": "5K_38\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_38\\sensor_information.csv"
+  },
+  {
+    "id": "1_NtK2CrTzSyl28I8EbQ9nGbLmCaT3yVg",
+    "path": "5K_39\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_39\\drone_information.csv"
+  },
+  {
+    "id": "1IlG16GXg_nD1ab6zgHtWuss8D2M1tcud",
+    "path": "5K_39\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_39\\drone_trajectories.csv"
+  },
+  {
+    "id": "1DYCxowRHIHrXssiAEYHxnHn-ZyA__N2Y",
+    "path": "5K_39\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_39\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1wBHFM9sX0BIHkXt9wcQC1mtds1E46yQS",
+    "path": "5K_39\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_39\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1kWISxFO_-eN-sr8lWslYqnGwqWxLJVJB",
+    "path": "5K_39\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_39\\sensor_distances.csv"
+  },
+  {
+    "id": "1_YeHUlIfFcIQCtp_M4RfoSenQBKqHdm8",
+    "path": "5K_39\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_39\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1Devf8qlRL-M4Sl6u-WqHShGVY0rsZfOj",
+    "path": "5K_39\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_39\\sensor_information.csv"
+  },
+  {
+    "id": "1uXkESyTJksQwAGwOrYQ6iR2TD31dWkmg",
+    "path": "5K_4\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_4\\drone_information.csv"
+  },
+  {
+    "id": "1Gyxp0lD7PxhYZuqk9Y1Gpg-coX6Psys9",
+    "path": "5K_4\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_4\\drone_trajectories.csv"
+  },
+  {
+    "id": "1bwFM247zjFMMisMaSfz3G_mPapq7h9Mr",
+    "path": "5K_4\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_4\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1zjafz_Q8RiCTm9DcUL3mvcxvUS079CVA",
+    "path": "5K_4\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_4\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1eaCFYyoBceNr0T5TypIqBhMwkXLsv27g",
+    "path": "5K_4\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_4\\sensor_distances.csv"
+  },
+  {
+    "id": "1cEyJIpMvcnxkEUIi93wzBLpT66mfO7sd",
+    "path": "5K_4\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_4\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1YG47PxH1AkPH0di-a90MPcZQBxCMhyQI",
+    "path": "5K_4\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_4\\sensor_information.csv"
+  },
+  {
+    "id": "1WGZqMtNJhEHjBE7gJRbm3-LxSb4Dq-y8",
+    "path": "5K_5\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_5\\drone_information.csv"
+  },
+  {
+    "id": "1C2byzkiPgtGyA7eMFE1HHxA8Hhchq7yO",
+    "path": "5K_5\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_5\\drone_trajectories.csv"
+  },
+  {
+    "id": "1vF3LyhFO8fziIghplxrkWjWvoqXaEzW3",
+    "path": "5K_5\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_5\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1PslnvN79FMvnNLhFv7kK_vxuSnYZV8PZ",
+    "path": "5K_5\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_5\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1K0-QHBB4JGpmrjOTz___tPPuQ7gzk64w",
+    "path": "5K_5\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_5\\sensor_distances.csv"
+  },
+  {
+    "id": "1ZANyOkhKKYwL8Pkfk_QqyrKc8emGSlBL",
+    "path": "5K_5\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_5\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1AsUV0AOPanBV4LH6YaM6qVkt64wIogHn",
+    "path": "5K_5\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_5\\sensor_information.csv"
+  },
+  {
+    "id": "1q-mMEytqQlSpL4quB_Eigu0yNldLmVbC",
+    "path": "5K_6\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_6\\drone_information.csv"
+  },
+  {
+    "id": "1OTCSsSW8ZM0UKVvvsYUkiq0NuatcAIsl",
+    "path": "5K_6\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_6\\drone_trajectories.csv"
+  },
+  {
+    "id": "16ofAAnRcQVNCxX1nYZGrnzBkHeT0NVJ1",
+    "path": "5K_6\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_6\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "137ul_cDXHg7Uz59bEGJbyYbQer76XhIa",
+    "path": "5K_6\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_6\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1oUAzXv3SjPK-VkEkmr4xQeVYSJfbWx53",
+    "path": "5K_6\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_6\\sensor_distances.csv"
+  },
+  {
+    "id": "1qaDMxZY6GYHmZCxmAAfyJvbWHlyBYEza",
+    "path": "5K_6\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_6\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "13q5qbde6rbo9oWXbiJrMB6C53bJcbxPN",
+    "path": "5K_6\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_6\\sensor_information.csv"
+  },
+  {
+    "id": "1Hv4EayId0khvaMKvqe-95I4l5uEE6JVL",
+    "path": "5K_7\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_7\\drone_information.csv"
+  },
+  {
+    "id": "1QXn6lsO03_3NftnquFQXaSS7taeRV1ZA",
+    "path": "5K_7\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_7\\drone_trajectories.csv"
+  },
+  {
+    "id": "1QdVUr-qoRXavX1Ie5scEWPIKwMySBhOy",
+    "path": "5K_7\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_7\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1JCVEvOLyIScabhCfoQvVf6fu0C455PKG",
+    "path": "5K_7\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_7\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1FeoieAF0NjBVifcjB1tsKW8ZK11bni7q",
+    "path": "5K_7\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_7\\sensor_distances.csv"
+  },
+  {
+    "id": "1bR91uMush-JtEMaHwD9UVg3OiQdY0JRO",
+    "path": "5K_7\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_7\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1RbiAByB1Qn9fI_n8yolAmaHjjMP2N_-6",
+    "path": "5K_7\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_7\\sensor_information.csv"
+  },
+  {
+    "id": "1vNNDGWsu-ifhQdw2O4UZYaBY_-aQMJfy",
+    "path": "5K_8\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_8\\drone_information.csv"
+  },
+  {
+    "id": "1vWYYWsZVKlh4D2r-_ezsBZhY8nf1v1xu",
+    "path": "5K_8\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_8\\drone_trajectories.csv"
+  },
+  {
+    "id": "1BiIuUOen-2F3kXTt0813D7npQkrokIjo",
+    "path": "5K_8\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_8\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1ctYHJDP0WHBQbdNRSVF2HL6_LYCxQdqY",
+    "path": "5K_8\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_8\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "1JVmREzxt9CRijZoR3RpHuxWri-ION5a7",
+    "path": "5K_8\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_8\\sensor_distances.csv"
+  },
+  {
+    "id": "15TDh4pBWDXwgrUUuKAXGhw1eAoqtaoxO",
+    "path": "5K_8\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_8\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1_lT5WFAh-e_6PX7JraPFKXsePLuAEKH0",
+    "path": "5K_8\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_8\\sensor_information.csv"
+  },
+  {
+    "id": "1ozTIGhCNm-HrumWUHLllhGZ3IoektPbM",
+    "path": "5K_9\\drone_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_9\\drone_information.csv"
+  },
+  {
+    "id": "1um1QJZCFlXvxr2B4uUGpzWe5ZoVrdJJm",
+    "path": "5K_9\\drone_trajectories.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_9\\drone_trajectories.csv"
+  },
+  {
+    "id": "1LMO8OvbWnULjj3_ZSycf44ai4-1BEQOr",
+    "path": "5K_9\\phi_sector_scheme.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_9\\phi_sector_scheme.csv"
+  },
+  {
+    "id": "1becdzwraNjlgqeaN7zF38R4ZCHraEdQn",
+    "path": "5K_9\\sensor_detection_summary.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_9\\sensor_detection_summary.csv"
+  },
+  {
+    "id": "103zHmdOEngKvkkiNZ3yrGydoNz4NvRAw",
+    "path": "5K_9\\sensor_distances.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_9\\sensor_distances.csv"
+  },
+  {
+    "id": "1Qtu2Y1yWczddAKj7hzUDHuNcr9rqr4yX",
+    "path": "5K_9\\sensor_gain_sectors.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_9\\sensor_gain_sectors.csv"
+  },
+  {
+    "id": "1LNuIove8oKk3g7fSDQwNkH7jTwe20FHF",
+    "path": "5K_9\\sensor_information.csv",
+    "local_path": "C:\\Users\\user\\Documents\\BGU-Master\\Transformer-based-UAV-Localization-with-Multi-Sensors\\train_data_10_sensors_zsectors_ptx_model_preprocessing\\5K_9\\sensor_information.csv"
+  }
+]

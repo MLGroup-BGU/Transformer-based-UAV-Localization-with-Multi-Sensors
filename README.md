@@ -1,6 +1,6 @@
-﻿# Transformer-Based UAV Localization with Multi-Sensors
+# Transformer-Based UAV Localization with Multi-Sensors
 
-A deep learning pipeline for real-time 3D UAV (drone) localization using a network of ground-based RF sensors. The system fuses multi-sensor RSSI (Received Signal Strength Indicator) measurements through a Hybrid Spatiotemporal Transformer Encoder and an LSTM Decoder to predict the drone's 3D position (x, y, z) in kilometers.
+A deep learning framework for real-time 3D UAV (drone) localization using a passive network of ground-based RF sensors. The system processes multi-sensor RSSI (Received Signal Strength Indicator) power readings across antenna sectors, fusing spatial, temporal, and hardware characteristics through a Hybrid Spatiotemporal Transformer Encoder and an LSTM Decoder to predict 3D UAV coordinates $(x, y, z)$ in kilometers.
 
 ---
 
@@ -8,45 +8,46 @@ A deep learning pipeline for real-time 3D UAV (drone) localization using a netwo
 
 - [System Overview](#system-overview)
 - [Architecture](#architecture)
-- [Repository Structure](#repository-structure)
-- [Data Format](#data-format)
-- [Requirements](#requirements)
+- [Repository Layout](#repository-layout)
+- [Prerequisites & Setup](#prerequisites--setup)
 - [Quick Start](#quick-start)
-- [Usage](#usage)
-  - [Step 0 (Optional): Pre-compute Sensor Distances](#step-0-optional-pre-compute-sensor-distances)
-  - [Step 1: Run Inference — Single Experiment](#step-1-run-inference--single-experiment)
-  - [Step 2: Run Inference — All Experiments (Batch)](#step-2-run-inference--all-experiments-batch)
-  - [Step 3 (Optional): Online XGBoost Post-Processing](#step-3-optional-online-xgboost-post-processing)
-  - [Step 4 (Optional): Offline XGBoost Training and Evaluation](#step-4-optional-offline-xgboost-training-and-evaluation)
+- [Training the Model from Scratch](#training-the-model-from-scratch)
+  - [Step 1: Download / Extract Raw Datasets](#step-1-download--extract-raw-datasets)
+  - [Step 2: Run Data Preprocessing & SQL Normalization](#step-2-run-data-preprocessing--sql-normalization)
+  - [Step 3: Build Binary Tensor Dataset Caches](#step-3-build-binary-tensor-dataset-caches)
+  - [Step 4: Train the Transformer Encoder](#step-4-train-the-transformer-encoder)
+  - [Step 5: Model Weights & Checkpoint Management](#step-5-model-weights--checkpoint-management)
+- [Testing & Experimenting](#testing--experimenting)
+  - [Step 1: Run Predictor Evaluation](#step-1-run-predictor-evaluation)
+  - [Step 2: Linear Power Noise Injection Testing](#step-2-linear-power-noise-injection-testing)
+  - [Step 3: Execute Batch Noise Matrix](#step-3-execute-batch-noise-matrix)
+  - [Step 4: Plotting & Visualizing Results](#step-4-plotting--visualizing-results)
 - [CLI Reference](#cli-reference)
-- [Output Files](#output-files)
-- [Running on an HPC Cluster (SLURM)](#running-on-an-hpc-cluster-slurm)
-- [Normalization Rules](#normalization-rules)
-- [Model Checkpoints](#model-checkpoints)
+- [Evaluation Metrics & Normalization Rules](#evaluation-metrics--normalization-rules)
 
 ---
 
 ## System Overview
 
-The system addresses the problem of **UAV 3D localization** using a passive network of 10 ground-based RF sensors. Each sensor detects RSSI power readings across up to 6 antenna sectors at each timestamp. The pipeline:
+The system addresses the challenge of 3D drone position estimation using ground RF sensor arrays. Each sensor detects power signals across up to 6 directional sectors at each timestamp. The pipeline:
 
-1. **Ingests** raw multi-sensor detection CSVs from the `Data/` folder.
-2. **Preprocesses** the data into a dense Cartesian Product representation (10 sensors x N timestamps).
-3. **Encodes** the fused spatiotemporal sensor signals with a Hybrid Transformer Encoder.
-4. **Decodes** the encoder hidden states through an LSTM Decoder to produce 3D (x, y, z) UAV coordinates.
-5. **Optionally refines** predictions using an XGBoost/Gradient Boosting post-processor.
-6. **Reports** localization error metrics (2D/3D mean, median, P95).
+1. **Ingests** raw multi-sensor detection logs from `data/`.
+2. **Preprocesses** and densifies data into a Cartesian Product skeleton ($10 \text{ sensors} \times N \text{ timestamps}$).
+3. **Encodes** dynamic RSSI sector power, static sensor parameters (gain, SINR threshold, sensitivity), 3D spatial coordinates, and temporal sequence indices using a **Hybrid Spatiotemporal Transformer Encoder**.
+4. **Decodes** hidden states into continuous 3D spatial positions $(x, y, z)$ via an **LSTM Decoder**.
+5. **Optionally refines** coordinates using an **XGBoost Post-Processor**.
+6. **Compares** deep learning predictors against a baseline **RSSI Path-Loss Multilateration** solver across varying noise levels.
 
 ---
 
 ## Architecture
 
-`
+```
 Sensor Data (10 sensors x T timestamps)
        |
        v
 +---------------------------------------------+
-|         HybridSpatiotemporalPredictor        |  (HybridEncoder.py)
+|         HybridSpatiotemporalPredictor        |  (src/models/hybrid_encoder.py)
 |                                             |
 |  +------------------+                       |
 |  | SparseDynamicEnc |  <- sector_1..6 (RSSI)|
@@ -69,289 +70,277 @@ Sensor Data (10 sensors x T timestamps)
            | Encoder hidden states (embedding)
            v
 +------------------------------+
-|         LSTMDecoder          |  (Linear_Layer_embDec/LSTM_decoder30seq.py)
+|         LSTMDecoder          |  (src/models/lstm_decoder.py)
 |  Input Proj -> LSTM -> FC    |
 |  -> (x_d, y_d, z_d) in km   |
 +------------------------------+
            |
            v (Optional)
 +------------------------------+
-|    XGBoost Post-Processor    |  (Post Processing XGBoost/)
+|    XGBoost Post-Processor    |  (src/postprocessing/online_post_processor.py)
 |   Refines 3D coordinates     |
 |   using temporal context &   |
 |   sensor geometry features   |
 +------------------------------+
-`
-
-**Sliding Window Inference**: Inference runs on overlapping windows of `seq_len=30` consecutive sensor rows. Each window's last-timestep prediction is aggregated per timestamp (mean over overlapping windows) to produce the final trajectory.
-
----
-
-## Repository Structure
-
-`
-Transformer-based-UAV-Localization-with-Multi-Sensors/
-|-- Data/                                              # Raw experiment dataset (CSV)
-|   |-- *_detections.csv                              # Per-sensor RSSI detections
-|   |-- *_drone_trajectories.csv                      # Ground-truth UAV positions
-|   |-- *_sensor_distances.csv                        # Sensor pair coordinates
-|   +-- *_sensor_information.csv                      # Static sensor hardware properties
-|
-+-- Encoder-Decoder/                                  # Core inference pipeline
-    |-- HybridEncoder.py                              # Transformer Encoder architecture
-    |-- positional_encoding.py                        # 1D & 3D positional encoding modules
-    |-- predict_uav_location.py                       # Main inference & evaluation script
-    |-- calculate_active_sensors_distance.py          # Pre-computes UAV-to-sensor distances
-    |-- hybrid_predictor_10sensors_1_epochs.pth       # Trained Encoder checkpoint
-    |-- experiment_active_sensor_distances.json       # Precomputed distance filter map
-    |-- experiments_summary.csv                       # Per-experiment evaluation summary
-    |-- predicted_uav_trajectories_all.csv            # Full batch trajectory predictions
-    |
-    |-- Linear_Layer_embDec/                          # LSTM Decoder
-    |   |-- LSTM_decoder30seq.py                     # LSTM Decoder architecture & training
-    |   |-- decoder_10sensors_29_epochs_baseline_30seq.pth  # Trained Decoder checkpoint
-    |   +-- run_decoder.sbatch                       # SLURM HPC training script
-    |
-    +-- Post Processing XGBoost/                      # Post-processing refinement
-        |-- online_post_processor.py                  # Online inference-time XGBoost refiner
-        +-- uav_location_predictor.py                 # Offline k-fold XGBoost training & eval
-`
-
----
-
-## Data Format
-
-The system expects four raw CSV files in the `Data/` directory. Files are auto-detected by keyword matching (preferring filenames starting with `no_anomalies_`):
-
-| File Suffix | Description |
-|---|---|
-| `*_detections.csv` | RSSI readings: `experiment_id`, `sensor_id`, `timestamp`, `sector_detected`, `total_power_dBm`, `drone_positions` |
-| `*_sensor_information.csv` | Static hardware: `sensor_id`, `gain` (dB), `sinr_threshold` (dB), `sensitivity` (dBm) |
-| `*_sensor_distances.csv` | Sensor geometry: `exp_id`, `sensor1_id`, `sensor2_id`, `x1`, `y1`, `z1`, `x2`, `y2`, `z2` (meters) |
-| `*_drone_trajectories.csv` | Ground-truth UAV positions (used for evaluation only) |
-
----
-
-## Requirements
-
-Install the required Python packages:
-
-```bash
-pip install torch numpy pandas tqdm scikit-learn xgboost joblib
 ```
 
+---
+
+## Repository Layout
+
+```
+Transformer-based-UAV-Localization-with-Multi-Sensors/
+│
+├── .gitignore                      # Git ignore rules (checkpoints, cache, outputs)
+├── README.md                       # Comprehensive project documentation
+├── requirements.txt                # Python package dependencies
+├── main.py                         # Root entrypoint CLI wrapper
+│
+├── data/                           # Data directory (Raw CSVs & Cache)
+│   ├── .gitkeep
+│   ├── data_preprocessing.py       # SQL normalization & preprocessing script
+│   └── download_drive_data.py      # Google Drive dataset & checkpoint downloader
+│
+├── models/                         # Model weights directory [Ignored by Git except .gitkeep]
+│   ├── .gitkeep
+│   ├── encoder/                    # Transformer Encoder checkpoints (.pth)
+│   ├── decoder/                    # LSTM Decoder checkpoints (.pth)
+│   └── xgboost/                    # XGBoost post-processor model (.joblib)
+│
+├── src/                            # Central Reusable Python Package
+│   ├── __init__.py
+│   ├── models/                     # Model architectures
+│   │   ├── __init__.py
+│   │   ├── positional_encoding.py  # 1D Sinusoidal, 3D RFF, Dual Basis encodings
+│   │   ├── hybrid_encoder.py       # Hybrid Spatiotemporal Transformer Encoder
+│   │   └── lstm_decoder.py         # LSTM Trajectory Decoder
+│   │
+│   ├── predictors/                 # High-level UAV location predictor classes
+│   │   ├── __init__.py
+│   │   ├── base_predictor.py       # Predictor interface & metric evaluation
+│   │   ├── rssi_predictor.py       # RSSI path-loss multilateration baseline
+│   │   └── encoder_decoder_predictor.py  # Transformer + LSTM predictor
+│   │
+│   ├── postprocessing/             # Post-processing refiners
+│   │   ├── __init__.py
+│   │   └── online_post_processor.py# Online XGBoost feature extractor & refiner
+│   │
+│   └── utils/                      # Plotting and visualization tools
+│       ├── __init__.py
+│       └── plot_results.py         # Summary aggregator & figure generator
+│
+├── scripts/                        # Execution Scripts & CLI Entrypoints
+│   ├── main.py                     # Main evaluation CLI script
+│   ├── train_hybrid.py             # Transformer Encoder training script
+│   ├── build_dataset_cache.py      # Binary tensor cache builder
+│   └── rssi_exp.bat                # Windows batch noise experiment runner
+│
+├── docs/                           # Documentation & Specs
+│   └── data_preprocessing_pipeline.md # Preprocessing specification & schema
+│
+└── outputs/                        # Default folder for predictions & plots [Ignored by Git]
+    └── .gitkeep
+```
+
+---
+
+## Prerequisites & Setup
+
+### Environment Dependencies
+Install required Python libraries:
+
+```bash
+pip install -r requirements.txt
+```
+
+Core packages include:
 - **Python**: 3.8+
-- **PyTorch**: 1.12+ (CUDA optional but recommended for large-batch evaluation)
+- **PyTorch**: 1.10+ (CUDA recommended for training and fast inference)
+- **Pandas / NumPy / Scikit-Learn / XGBoost**: Data handling & post-processing
+- **Matplotlib / Seaborn**: Result plotting and CDF visualizations
+- **gdown**: Automated dataset downloading from Google Drive
 
 ---
 
 ## Quick Start
 
 ```bash
-cd Encoder-Decoder
+# 1. Download datasets and pre-trained weights from Google Drive
+python data/download_drive_data.py
 
-# Run inference on experiment ID 1
-python predict_uav_location.py --exp_id 1
+# 2. Run predictor evaluation on 10 test experiments
+python main.py --max_exps 10
 
-# Run batch inference on all experiments
-python predict_uav_location.py --all
-
-# Batch with distance filter (only experiments where sensors are within 3000 m of UAV)
-python predict_uav_location.py --all --max_m 3000
+# 3. Aggregate results and plot performance figures
+python src/utils/plot_results.py --base_dir outputs
 ```
 
 ---
 
-## Usage
+## Training the Model from Scratch
 
-### Step 0 (Optional): Pre-compute Sensor Distances
+Follow these step-by-step instructions to train the model pipeline end-to-end starting from raw sensor logs.
 
-Generate `experiment_active_sensor_distances.json` for use by the `--max_m` distance filter. Only needs to be run once per dataset.
+### Step 1: Download / Extract Raw Datasets
+Fetch the raw multi-sensor detection datasets:
 
 ```bash
-cd Encoder-Decoder
-python calculate_active_sensors_distance.py
+python data/download_drive_data.py
+```
+This places the raw sensor detection logs, sensor hardware profiles, distance matrices, and ground truth trajectory CSVs inside `data/train_data_10_sensors_zsectors_ptx_model_preprocessing/` and `data/test_data_10_sensors_zsectors_ptx_model_preprocessing/`.
 
-# With custom paths
-python calculate_active_sensors_distance.py \
-    --data_dir ../Data \
-    --max_exps 500 \
-    --output_csv experiment_distances.csv
+### Step 2: Run Data Preprocessing & SQL Normalization
+Execute SQLite in-memory normalization to merge sensor positions, hardware gains/sensitivities, sector detections, and ground truth coordinates into normalized tables (`normalized_data.csv`):
+
+```bash
+python data/data_preprocessing.py
+```
+What this does:
+- Scales spatial coordinates $(x, y, z)$ from meters to kilometers ($\div 1000.0$).
+- Normalizes SINR threshold ($\div 10.0$) and sensitivity ($\div 90.0$).
+- Densifies asynchronous sensor events into a structured $10 \text{ sensors} \times T \text{ timestamps}$ grid.
+
+### Step 3: Build Binary Tensor Dataset Caches
+Convert preprocessed CSV files into contiguous, memory-mapped PyTorch tensor blocks (`subcache_*.pt`) for fast GPU streaming:
+
+```bash
+python scripts/build_dataset_cache.py
+```
+Outputs are written to:
+- `data/cache/train/subcache_*.pt`
+- `data/cache/test/subcache_*.pt`
+
+### Step 4: Train the Transformer Encoder
+Run the training script for the `HybridSpatiotemporalPredictor`:
+
+```bash
+python scripts/train_hybrid.py
 ```
 
-**Outputs:**
-- `experiment_active_sensor_distances.json` — used by the main inference script
-- `experiment_active_sensor_distances.csv` — human-readable per-experiment summary
+**Training Configuration**:
+- **Sequence Window Length (`seq_len`)**: 40 timestamps
+- **Batch Size**: 512
+- **Embedding Dim (`d_model`)**: 128
+- **Transformer Heads (`num_heads`)**: 8
+- **Layers (`num_layers`)**: 3
+- **Learning Rate**: $1 \times 10^{-4}$ with Adam optimizer and automatic mixed precision (AMP).
+
+### Step 5: Model Weights & Checkpoint Management
+Trained checkpoint weights are automatically saved per epoch to `models/encoder/`:
+- `models/encoder/hybrid_predictor_10sensors_1_epochs.pth`
+- `models/encoder/hybrid_predictor_10sensors_10_epochs.pth`
+
+The predictor automatically detects and uses the latest `.pth` checkpoint file available in `models/encoder/` or `models/`.
 
 ---
 
-### Step 1: Run Inference — Single Experiment
+## Testing & Experimenting
+
+### Step 1: Run Predictor Evaluation
+To evaluate predictors on raw test set experiments:
 
 ```bash
-cd Encoder-Decoder
+# Evaluate all experiments in the test set
+python main.py
 
-# Using raw CSVs (auto-detects Data/ folder relative to the script)
-python predict_uav_location.py --exp_id 1
-
-# Explicitly specify data directory
-python predict_uav_location.py --exp_id 5 --data_dir /path/to/Data
-
-# Using a pre-normalized CSV (skips raw preprocessing)
-python predict_uav_location.py --csv_path /path/to/normalized.csv
-
-# Custom output path
-python predict_uav_location.py --exp_id 1 --output_csv results/exp1_predictions.csv
-
-# Run on GPU
-python predict_uav_location.py --exp_id 1 --device cuda
+# Evaluate a subset (e.g., first 10 experiments)
+python main.py --max_exps 10
 ```
 
----
-
-### Step 2: Run Inference — All Experiments (Batch)
+### Step 2: Linear Power Noise Injection Testing
+Test model robustness against measurement noise by injecting Gaussian normal noise in the **linear power domain** ($P_{\text{linear}} = 10^{P_{\text{dBm}}/10}$):
 
 ```bash
-cd Encoder-Decoder
+# Test with 1% linear power noise std dev
+python main.py --power_noise_std 0.01 --output_dir outputs/results_rssi_01
 
-# Evaluate all experiments
-python predict_uav_location.py --all
+# Test with 5% linear power noise std dev
+python main.py --power_noise_std 0.05 --output_dir outputs/results_rssi_05
 
-# Limit to first 100 experiments
-python predict_uav_location.py --all --max_exps 100
-
-# Filter by distance threshold (requires Step 0)
-python predict_uav_location.py --all --max_m 3000
-
-# Custom sensor distance map path
-python predict_uav_location.py --all --max_m 3000 \
-    --sensor_dist_map /path/to/experiment_active_sensor_distances.json
-
-# Save to a specific output file
-python predict_uav_location.py --all --output_csv results/all_predictions.csv
+# Test with 10% linear power noise std dev in absolute mode (mW)
+python main.py --power_noise_std 0.10 --noise_mode absolute --output_dir outputs/results_rssi_10
 ```
 
-**Outputs:**
-- `predicted_uav_trajectories_all.csv` — timestep-level predictions for all experiments
-- `experiments_summary.csv` — per-experiment 2D/3D error summary
+### Step 3: Execute Batch Noise Matrix
+Run evaluation across 10 noise levels ($1\%$ to $10\%$) using the Windows batch script:
 
----
+```cmd
+scripts/rssi_exp.bat
+```
+This generates evaluation summaries and detailed timestamp predictions inside `outputs/results_rssi_01/` through `outputs/results_rssi_10/`.
 
-### Step 3 (Optional): Online XGBoost Post-Processing
-
-Apply a trained XGBoost/Gradient Boosting model at inference time to refine the Transformer+LSTM predictions:
+### Step 4: Plotting & Visualizing Results
+Aggregate evaluation CSVs across noise levels and produce visualization plots:
 
 ```bash
-cd Encoder-Decoder
-
-python predict_uav_location.py --exp_id 1 \
-    --post_process \
-    --post_model_path "Post Processing XGBoost/post_processing_models.joblib"
+python src/utils/plot_results.py --base_dir outputs
 ```
 
-The post-processor appends `post_pred_x_d`, `post_pred_y_d`, `post_pred_z_d`, `post_error_2d_m`, and `post_error_3d_m` columns to the output CSV and prints a comparison of refined vs. original error metrics.
-
----
-
-### Step 4 (Optional): Offline XGBoost Training and Evaluation
-
-To train and evaluate the XGBoost post-processing model using k-fold cross-validation on existing predictions:
-
-```bash
-cd "Encoder-Decoder/Post Processing XGBoost"
-python uav_location_predictor.py
-```
-
-This script:
-- Loads Transformer+LSTM predictions from a CSV
-- Engineers temporal context, sensor geometry, and cross-axis correlation features
-- Trains separate XGBoost models for x, y, z refinement
-- Runs 5-fold trajectory-level cross-validation
-- Outputs aggregated error metrics and feature importance rankings
+**Generated Plots** (saved in `outputs/plots/`):
+1. `01_noise_vs_3d_error_metrics.png` — 3D Mean, Median, RMSE, and P95 errors vs noise percentage.
+2. `02_noise_vs_2d_and_z_error.png` — 2D Horizontal (XY) vs Z-Axis (Altitude) mean errors.
+3. `03_noise_vs_mse_loss.png` — PyTorch MSE Loss ($\text{km}^2$) across noise levels (log scale).
+4. `04_error_cdfs_across_noise.png` — Cumulative Distribution Function (CDF) curves of 3D spatial error.
+5. `05_trajectory_3d_and_2d_comparison.png` — 2D XY plane & 3D flight trajectory plots comparing predictions to Ground Truth.
+6. `06_error_over_time.png` — Instantaneous 3D localization error over timestamp steps.
+7. `07_latency_and_throughput.png` — Bar chart comparing inference latency (ms/step) and throughput (steps/sec).
 
 ---
 
 ## CLI Reference
 
-```
-predict_uav_location.py
+### Main Evaluation Script (`main.py` / `scripts/main.py`)
 
-  --data_dir PATH         Path to Data/ directory with raw CSVs (default: ../Data)
-  --csv_path PATH         Path to a pre-normalized CSV (bypasses raw preprocessing)
-  --raw                   Force raw CSV preprocessing even if csv_path is given
-  --exp_id INT            Experiment ID for single-experiment mode (default: 1)
-  --all, --all_exps       Run inference over ALL experiments in the Data/ folder
-  --max_exps INT          Maximum number of experiments in batch mode
-  --max_m FLOAT           Filter: only evaluate experiments where the mean
-                          active-sensor-to-UAV distance <= this value (metres).
-                          Requires experiment_active_sensor_distances.json.
-  --sensor_dist_map PATH  Path to experiment_active_sensor_distances.json
-  --window_size INT       Sliding window length in timestamps (default: 30)
-  --device STR            Compute device: 'cuda' or 'cpu'
-  --output_csv PATH       Path to save the output predictions CSV
-  --post_process          Apply online XGBoost post-processing refinement
-  --post_model_path PATH  Path to post_processing_models.joblib
-```
+| Flag | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--max_exps` | `int` | `None` (all) | Maximum number of test set experiments to evaluate |
+| `--power_noise_std` | `float` | `0.0` | Std dev of Gaussian noise added in linear power domain (e.g. `0.05` = 5%) |
+| `--ptx_noise_std` | `float` | `0.0` | Std dev of Gaussian noise added to drone transmit power ($P_{\text{tx}}$) |
+| `--noise_mode` | `str` | `relative` | Noise injection mode: `relative` (percentage multiplier) or `absolute` (mW) |
+| `--seed` | `int` | `42` | Random seed for reproducible noise generation |
+| `--output_dir` | `str` | `outputs/` | Destination folder for summary & detailed prediction CSV files |
 
-```
-calculate_active_sensors_distance.py
+### Dataset Cache Builder (`scripts/build_dataset_cache.py`)
 
-  --data_dir PATH         Path to Data/ directory (default: ../Data)
-  --max_exps INT          Maximum number of experiments to process
-  --output_csv PATH       Path to the detailed output CSV
-```
+| Flag | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `seq_len` | `int` | `40` | Sliding window sequence length |
+| `overwrite` | `bool` | `False` | Whether to overwrite existing `.pt` cache blocks |
+
+### Result Plotter (`src/utils/plot_results.py`)
+
+| Flag | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--base_dir` | `str` | `outputs/` | Base directory containing `results_rssi_*` or `outputs/` folders |
+| `--output_dir` | `str` | `outputs/plots/` | Directory to save generated plot PNG figures |
+| `--show` | `flag` | `False` | Display plots interactively in a window |
 
 ---
 
-## Output Files
+## Evaluation Metrics & Normalization Rules
 
-| File | Description |
-|---|---|
-| `predicted_uav_trajectories.csv` | Single-experiment predictions: `timestamp`, `pred_x_d`, `pred_y_d`, `pred_z_d`, `gt_x_d`, `gt_y_d`, `gt_z_d`, `error_2d_m`, `error_3d_m`, `error_z_m` |
-| `predicted_uav_trajectories_all.csv` | Batch predictions: same columns plus `exp_id` |
-| `experiments_summary.csv` | Per-experiment: `exp_id`, `2D_Mean_Error (m)`, `3D_Mean_Error (m)`, `2D_Median_Error (m)`, `3D_P95_Error (m)`, average altitude, valid timestep count |
+### Evaluated Error Metrics
 
-All coordinates are in **kilometers (km)**; all error metrics are in **meters (m)**.
+| Metric | Unit | Definition / Math Formula |
+| :--- | :--- | :--- |
+| **3D Mean Error** | meters (m) | Average 3D Euclidean distance: $\frac{1}{N} \sum \sqrt{(x - \hat{x})^2 + (y - \hat{y})^2 + (z - \hat{z})^2}$ |
+| **3D Median Error** | meters (m) | 50th percentile (median) 3D spatial error |
+| **3D RMSE** | meters (m) | Root Mean Squared Error: $\sqrt{\frac{1}{N} \sum E_{3D}^2}$ |
+| **3D P95 Error** | meters (m) | 95th percentile 3D spatial error bound |
+| **Trajectory Step Loss** | meters (m) | Step displacement continuity error between consecutive steps |
+| **2D Mean Error** | meters (m) | Horizontal error in XY plane |
+| **Z-Axis Mean Error** | meters (m) | Altitude estimation error |
+| **PyTorch MSELoss** | $\text{km}^2$ | Matches PyTorch `nn.MSELoss()` calculation in $\text{km}^2$ |
+| **Inference Latency** | ms / step | Execution time per timestamp step |
 
----
+### Feature Normalization Standards
+According to `docs/data_preprocessing_pipeline.md`:
 
-## Running on an HPC Cluster (SLURM)
-
-A SLURM batch script is provided for training the LSTM Decoder on an HPC cluster:
-
-```bash
-# From the Linear_Layer_embDec/ directory
-sbatch run_decoder.sbatch
-```
-
-Before submitting, edit `run_decoder.sbatch`:
-- `#SBATCH --partition` — set to your cluster's partition name
-- `#SBATCH --gpus` — set GPU type/count
-- `source activate my_env` — replace `my_env` with your conda environment name
-
----
-
-## Normalization Rules
-
-All preprocessing is aligned with `data_preprocessing_pipeline (1).md`:
-
-| Feature | Preprocessing | Training Statistics |
-|---|---|---|
-| `gain` (dB) | Z-score normalization | mean = -90.005570, std = 5.775258 |
-| `sinr_threshold` (dB) | Z-score normalization | mean = 9.999188, std = 2.888816 |
-| `sensitivity` (dBm) | Z-score normalization | mean = -0.003132, std = 2.887262 |
-| Sensor coords x, y, z | Divide by 1000 (m -> km) | — |
-| UAV coords x_d, y_d, z_d | Divide by 1000 (m -> km) | — |
-| `sector_1`..`sector_6` (RSSI) | Raw dBm, zero-padded for inactive | — |
-
-Sequence structure: 10 sensors x 60 timesteps (Cartesian Product skeleton), sorted by `[exp_id, timestamp_number, sensor_id]`. Missing sensor/sector measurements are zero-padded.
-
----
-
-## Model Checkpoints
-
-| File | Description |
-|---|---|
-| `Encoder-Decoder/hybrid_predictor_10sensors_1_epochs.pth` | Trained `HybridSpatiotemporalPredictor`: d_model=128, nhead=8, num_layers=3, dim_feedforward=512 |
-| `Encoder-Decoder/Linear_Layer_embDec/decoder_10sensors_29_epochs_baseline_30seq.pth` | Trained `LSTMDecoder`: input_size=128, hidden_size=256, num_layers=2, trained for 29 epochs on 30-step windows |
-
-The inference script automatically resolves these paths relative to the script directory — no manual path configuration is required as long as the directory structure is preserved.
+| Feature | Raw Unit | Pipeline Normalization |
+| :--- | :--- | :--- |
+| `sector_1_power` .. `sector_6_power` | dBm | Raw dBm values ($0.0$ for non-detected inactive sectors) |
+| `sensor_x`, `sensor_y`, `sensor_z` | meters | Divided by $1000.0$ (converted to km) |
+| `gain` | dB | Raw gain |
+| `sinr_threshold` | dB | Divided by $10.0$ |
+| `sensitivity` | dBm | Divided by $90.0$ |
+| UAV Ground Truth `uav_x`, `uav_y`, `uav_z` | meters | Divided by $1000.0$ (converted to km) |

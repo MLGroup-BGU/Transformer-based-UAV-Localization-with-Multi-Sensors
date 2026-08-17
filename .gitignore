@@ -1,13 +1,45 @@
-# Python cache
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*.pyo
-Data/*.csv
-# Generated prediction output files (not committed)
-Encoder-Decoder/predicted_uav_trajectories.csv
-Encoder-Decoder/predicted_uav_trajectories_all.csv
-Encoder-Decoder/experiments_summary.csv
+*$py.class
 
-# OS
+# Caches and dataset artifacts
+Data/cache/
+Data/*_preprocessing/
+data/cache/
+data/*_preprocessing/
+.cometml-runs/
+*.cache
+
+# Model Weights and Checkpoints (Use Google Drive / download scripts to manage weights)
+*.pth
+*.pt
+*.joblib
+*.pkl
+models/*.pth
+models/*.joblib
+models/*.pt
+
+# Generated prediction output files and plots
+outputs/
+plots/
+results_rssi_*/
+*.csv
+!Data/*.csv
+!data/*.csv
+
+# Logs
+*.log
+log.txt
+
+# OS generated files
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Environment / IDE
+.vscode/
+.idea/
+.venv/
+env/
+venv/
