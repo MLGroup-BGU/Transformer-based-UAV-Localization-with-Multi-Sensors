@@ -21,7 +21,7 @@ models/*.joblib
 models/*.pt
 
 # Generated prediction output files and plots
-outputs/
+outputs/*.csv
 plots/
 results_rssi_*/
 *.csv
