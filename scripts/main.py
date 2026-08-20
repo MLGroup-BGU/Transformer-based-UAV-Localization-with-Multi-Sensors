@@ -13,6 +13,7 @@ import time
 from typing import Dict, Any, List, Optional
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
 # Add project root to sys.path
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -22,7 +23,8 @@ if ROOT_DIR not in sys.path:
 
 from src.predictors.base_predictor import BaseUAVPredictor
 from src.predictors.encoder_decoder_predictor import EncoderDecoderPredictor
-from src.predictors.rssi_predictor import RSSIPredictor
+from src.predictors.rssi_wcl_predictor import RSSIWCLPredictor
+from src.predictors.rssi_trilateration_predictor import RSSITrilaterationPredictor
 
 
 def resolve_5k4_data_dir() -> str:
@@ -230,8 +232,11 @@ def evaluate_predictors_on_test_data(
     except FileNotFoundError as e:
         print(f"[WARNING] EncoderDecoderPredictor disabled:\n{e}\n")
 
-    rssi_predictor = RSSIPredictor()
-    predictors.append(rssi_predictor)
+    rssi_wcl = RSSIWCLPredictor()
+    predictors.append(rssi_wcl)
+
+    rssi_trilateration = RSSITrilaterationPredictor()
+    predictors.append(rssi_trilateration)
 
     summary_rows = []
     all_exp_predictions = []
@@ -242,7 +247,7 @@ def evaluate_predictors_on_test_data(
         all_pred_list, all_true_list, all_ts_list = [], [], []
         total_time_accum = 0.0
 
-        for exp_id in unique_exps:
+        for exp_id in tqdm(unique_exps, desc=f"Evaluating {pred.name}"):
             exp_det = det_df[det_df[exp_col] == exp_id].copy()
 
             raw_exp_input = {

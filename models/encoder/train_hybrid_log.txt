@@ -1,0 +1,118 @@
+[*] Logging training output to C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\train_hybrid_log.txt
+[*] Training started at: 2026-08-18 17:51:07.479488
+
+==================================================
+  Hybrid Spatiotemporal Predictor Training       
+==================================================
+[*] PyTorch Version : 2.13.0+cu130
+[*] Active Device   : CUDA -> NVIDIA GeForce RTX 5090 Laptop GPU (23.89 GB VRAM)
+==================================================
+
+[*] Loaded model weights from C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_2_epochs.pth
+Starting Hybrid Training...
+[*] Logging training output to C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\train_hybrid_log.txt
+[*] Training started at: 2026-08-18 17:52:08.176318
+
+==================================================
+  Hybrid Spatiotemporal Predictor Training       
+==================================================
+[*] PyTorch Version : 2.13.0+cu130
+[*] Active Device   : CUDA -> NVIDIA GeForce RTX 5090 Laptop GPU (23.89 GB VRAM)
+==================================================
+
+[*] Loaded model weights from C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_2_epochs.pth
+Starting Hybrid Training...
+Epoch [1/10], Train Loss: 16.0880, Val Loss: 15.99013076213653
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_3_epochs.pth
+Epoch [2/10], Train Loss: 15.8995, Val Loss: 15.57627391973199
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_4_epochs.pth
+Epoch [3/10], Train Loss: 15.6871, Val Loss: 15.172124748374577
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_5_epochs.pth
+Epoch [4/10], Train Loss: 15.0904, Val Loss: 14.116361692370342
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_6_epochs.pth
+Epoch [5/10], Train Loss: 14.6186, Val Loss: 14.175454664754882
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_7_epochs.pth
+[*] Logging training output to C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\train_hybrid_log.txt
+[*] Training started at: 2026-08-19 00:18:42.944389
+
+==================================================
+  Hybrid Spatiotemporal Predictor Training       
+==================================================
+[*] PyTorch Version : 2.13.0+cu130
+[*] Active Device   : CUDA -> NVIDIA GeForce RTX 5090 Laptop GPU (23.89 GB VRAM)
+==================================================
+
+[*] Loaded model weights from C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_7_epochs.pth
+Starting Hybrid Training...
+Epoch [1/3], Train Loss: 14.3194, Val Loss: 13.400945755432497
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_8_epochs.pth
+Epoch [2/3], Train Loss: 14.0423, Val Loss: 13.004552282104125
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_9_epochs.pth
+Epoch [3/3], Train Loss: 13.8624, Val Loss: 12.875664023537041
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_10_epochs.pth
+[*] Logging training output to C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\train_hybrid_log.txt
+[*] Training started at: 2026-08-19 08:43:20.701264
+
+==================================================
+  Hybrid Spatiotemporal Predictor Training       
+==================================================
+[*] PyTorch Version : 2.13.0+cu130
+[*] Active Device   : CUDA -> NVIDIA GeForce RTX 5090 Laptop GPU (23.89 GB VRAM)
+==================================================
+
+[*] Loaded model weights from C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_10_epochs.pth
+Starting Hybrid Training...
+Epoch [1/3], Train Loss: 13.7178, Val Loss: 12.990201636225697
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_11_epochs.pth
+Epoch [2/3], Train Loss: 13.5901, Val Loss: 14.135936096269088
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_12_epochs.pth
+Epoch [3/3], Train Loss: 13.4805, Val Loss: 12.63838603625538
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_13_epochs.pth
+[*] Logging training output to C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\train_hybrid_log.txt
+[*] Training started at: 2026-08-19 12:10:29.063176
+
+==================================================
+  Hybrid Spatiotemporal Predictor Training       
+==================================================
+[*] PyTorch Version : 2.13.0+cu130
+[*] Active Device   : CUDA -> NVIDIA GeForce RTX 5090 Laptop GPU (23.89 GB VRAM)
+==================================================
+
+[*] Loaded model weights from C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_13_epochs.pth
+Starting Hybrid Training...
+Epoch [1/3], Train Loss: 13.3795, Val Loss: 13.508816531563664
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_14_epochs.pth
+Epoch [2/3], Train Loss: 13.2785, Val Loss: 12.256354192678705
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_15_epochs.pth
+Epoch [3/3], Train Loss: 13.1410, Val Loss: 12.170072076582716
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_16_epochs.pth
+[*] Logging training output to C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\train_hybrid_log.txt
+[*] Training started at: 2026-08-19 15:42:32.088459
+
+==================================================
+  Hybrid Spatiotemporal Predictor Training       
+==================================================
+[*] PyTorch Version : 2.13.0+cu130
+[*] Active Device   : CUDA -> NVIDIA GeForce RTX 5090 Laptop GPU (23.89 GB VRAM)
+==================================================
+
+[*] Loaded model weights from C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_16_epochs.pth
+Starting Hybrid Training...
+Epoch [1/1], Train Loss: nan, Val Loss: 12.272327018741981
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_17_epochs.pth
+[*] Logging training output to C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\train_hybrid_log.txt
+[*] Training started at: 2026-08-19 17:04:55.911283
+
+==================================================
+  Hybrid Spatiotemporal Predictor Training       
+==================================================
+[*] PyTorch Version : 2.13.0+cu130
+[*] Active Device   : CUDA -> NVIDIA GeForce RTX 5090 Laptop GPU (23.89 GB VRAM)
+==================================================
+
+[*] Loaded model weights from C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_17_epochs.pth
+Starting Hybrid Training...
+Epoch [1/5], Train Loss: nan, Val Loss: 12.40605292542032
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_18_epochs.pth
+Epoch [2/5], Train Loss: nan, Val Loss: 12.224761416462448
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_19_epochs.pth

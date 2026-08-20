@@ -36,7 +36,7 @@ class EncoderDecoderPredictor(BaseUAVPredictor):
         device: Optional[str] = None,
         window_size: int = 40,
         num_sensors: int = 10,
-        name: str = "Encoder-Decoder (Epoch 9/7)",
+        name: str = "Encoder-Decoder (Epoch 16/12)",
     ):
         super().__init__(name=name)
         self.window_size = window_size
@@ -49,6 +49,9 @@ class EncoderDecoderPredictor(BaseUAVPredictor):
 
         script_dir = os.path.dirname(os.path.abspath(__file__))
         root_dir = os.path.abspath(os.path.join(script_dir, "..", ".."))
+
+        enc_filename = "hybrid_predictor_10sensors_16_epochs.pth"
+        dec_filename = "decoder_10sensors_12_epochs.pth"
 
         search_dirs_enc = [
             os.path.join(root_dir, "models", "encoder"),
@@ -66,18 +69,16 @@ class EncoderDecoderPredictor(BaseUAVPredictor):
 
         self.enc_ckpt_path = self._resolve_checkpoint(
             specified_path=enc_ckpt_path,
-            default_filenames=["hybrid_predictor_10sensors_9_epochs.pth", "hybrid_predictor_10sensors_10_epochs.pth", "hybrid_predictor_10sensors_1_epochs.pth"],
+            target_filename=enc_filename,
             search_dirs=search_dirs_enc,
-            glob_patterns=["hybrid_predictor_*.pth", "*.pth"],
-            description="Transformer Encoder checkpoint"
+            description="Transformer Encoder checkpoint (Epoch 16)"
         )
 
         self.dec_ckpt_path = self._resolve_checkpoint(
             specified_path=dec_ckpt_path,
-            default_filenames=["decoder_10sensors_7_epochs_baseline_30seq.pth", "decoder_10sensors_29_epochs_baseline_30seq.pth"],
+            target_filename=dec_filename,
             search_dirs=search_dirs_dec,
-            glob_patterns=["decoder_*.pth", "*.pth"],
-            description="LSTM Decoder checkpoint"
+            description="LSTM Decoder checkpoint (Epoch 12)"
         )
 
         self.encoder, self.decoder = self._load_models()
@@ -85,12 +86,10 @@ class EncoderDecoderPredictor(BaseUAVPredictor):
     @staticmethod
     def _resolve_checkpoint(
         specified_path: Optional[str],
-        default_filenames: list,
+        target_filename: str,
         search_dirs: list,
-        glob_patterns: list,
         description: str
     ) -> str:
-        import glob
         if specified_path:
             if os.path.exists(specified_path):
                 return os.path.abspath(specified_path)
@@ -98,28 +97,14 @@ class EncoderDecoderPredictor(BaseUAVPredictor):
                 raise FileNotFoundError(f"{description} specified at '{specified_path}' does not exist.")
 
         for d in search_dirs:
-            for fname in default_filenames:
-                candidate = os.path.join(d, fname)
-                if os.path.exists(candidate):
-                    return candidate
+            candidate = os.path.join(d, target_filename)
+            if os.path.exists(candidate):
+                return os.path.abspath(candidate)
 
-        for d in search_dirs:
-            if os.path.exists(d):
-                for pat in glob_patterns:
-                    matches = glob.glob(os.path.join(d, pat))
-                    matches.extend(glob.glob(os.path.join(d, "**", pat), recursive=True))
-                    if matches:
-                        matches = sorted(list(set(matches)), key=lambda p: os.path.getmtime(p), reverse=True)
-                        return matches[0]
-
-        checked_str = "\n".join(f" - {d}" for d in search_dirs)
+        checked_str = "\n".join(f" - {os.path.join(d, target_filename)}" for d in search_dirs)
         raise FileNotFoundError(
-            f"{description} (.pth file) not found.\n"
-            f"Checked locations:\n{checked_str}\n\n"
-            f"To resolve this issue:\n"
-            f"1. Run 'python data/download_drive_data.py' to automatically download model weights.\n"
-            f"2. Or place your trained .pth weights into 'models/encoder/' or 'models/decoder/'.\n"
-            f"3. Or pass '--enc_ckpt_path' / '--dec_ckpt_path' arguments."
+            f"{description} '{target_filename}' not found.\n"
+            f"Checked locations:\n{checked_str}"
         )
 
     def _load_models(self) -> Tuple[nn.Module, nn.Module]:

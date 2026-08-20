@@ -1,10 +1,10 @@
-python main.py --max_exps 50 --power_noise_std 0.01 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_01
-python main.py --max_exps 50 --power_noise_std 0.02 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_02
-python main.py --max_exps 50 --power_noise_std 0.03 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_03
-python main.py --max_exps 50 --power_noise_std 0.04 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_04
-python main.py --max_exps 50 --power_noise_std 0.05 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_05
-python main.py --max_exps 50 --power_noise_std 0.06 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_06
-python main.py --max_exps 50 --power_noise_std 0.07 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_07
-python main.py --max_exps 50 --power_noise_std 0.08 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_08
-python main.py --max_exps 50 --power_noise_std 0.09 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_09
-python main.py --max_exps 50 --power_noise_std 0.10 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_10
+python main.py --power_noise_std 0.01 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_01
+python main.py --power_noise_std 0.02 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_02
+python main.py --power_noise_std 0.03 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_03
+python main.py --power_noise_std 0.04 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_04
+python main.py --power_noise_std 0.05 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_05
+python main.py --power_noise_std 0.06 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_06
+python main.py --power_noise_std 0.07 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_07
+python main.py --power_noise_std 0.08 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_08
+python main.py --power_noise_std 0.09 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_09
+python main.py --power_noise_std 0.10 --ptx_noise_std 0.0 --output_dir outputs/results_rssi_10

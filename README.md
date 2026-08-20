@@ -118,7 +118,8 @@ Transformer-based-UAV-Localization-with-Multi-Sensors/
 │   ├── predictors/                 # High-level UAV location predictor classes
 │   │   ├── __init__.py
 │   │   ├── base_predictor.py       # Predictor interface & metric evaluation
-│   │   ├── rssi_predictor.py       # RSSI path-loss multilateration baseline
+│   │   ├── rssi_wcl_predictor.py   # RSSI weighted centroid localization predictor
+│   │   ├── rssi_trilateration_predictor.py # RSSI path-loss multilateration predictor
 │   │   └── encoder_decoder_predictor.py  # Transformer + LSTM predictor
 │   │
 │   ├── postprocessing/             # Post-processing refiners

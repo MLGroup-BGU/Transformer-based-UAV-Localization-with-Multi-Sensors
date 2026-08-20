@@ -1,0 +1,56 @@
+[*] Logging training output to C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\train_lstm_log.txt
+[*] Training started at: 2026-08-19 20:25:33.765114
+
+==================================================
+  LSTM Decoder Training                            
+==================================================
+[*] PyTorch Version : 2.13.0+cu130
+[*] Active Device   : CUDA -> NVIDIA GeForce RTX 5090 Laptop GPU (23.89 GB VRAM)
+==================================================
+
+[*] Loaded pre-trained encoder weights from: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_16_epochs.pth
+[*] Initialized LSTM Decoder (training from scratch)
+Starting LSTM Decoder Training...
+[*] Logging training output to C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\train_lstm_log.txt
+[*] Training started at: 2026-08-19 20:27:07.704456
+
+==================================================
+  LSTM Decoder Training                            
+==================================================
+[*] PyTorch Version : 2.13.0+cu130
+[*] Active Device   : CUDA -> NVIDIA GeForce RTX 5090 Laptop GPU (23.89 GB VRAM)
+==================================================
+
+[*] Loaded pre-trained encoder weights from: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\encoder\hybrid_predictor_10sensors_16_epochs.pth
+[*] Initialized LSTM Decoder (training from scratch)
+Starting LSTM Decoder Training...
+Epoch [1/15], Train Loss: 0.0113, Val Loss: 0.006832923725654141
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_1_epochs.pth
+Epoch [2/15], Train Loss: 0.0011, Val Loss: 0.004707978440401019
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_2_epochs.pth
+Epoch [3/15], Train Loss: 0.0008, Val Loss: 0.0037729640793142814
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_3_epochs.pth
+Epoch [4/15], Train Loss: 0.0006, Val Loss: 0.003747703755441425
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_4_epochs.pth
+Epoch [5/15], Train Loss: 0.0005, Val Loss: 0.003463541500270459
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_5_epochs.pth
+Epoch [6/15], Train Loss: 0.0004, Val Loss: 0.0030144243604826163
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_6_epochs.pth
+Epoch [7/15], Train Loss: 0.0004, Val Loss: 0.0028684335766998
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_7_epochs.pth
+Epoch [8/15], Train Loss: 0.0004, Val Loss: 0.0029689238741669277
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_8_epochs.pth
+Epoch [9/15], Train Loss: 0.0003, Val Loss: 0.002791690597167336
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_9_epochs.pth
+Epoch [10/15], Train Loss: 0.0003, Val Loss: 0.002667160721092147
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_10_epochs.pth
+Epoch [11/15], Train Loss: 0.0003, Val Loss: 0.002637513031330431
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_11_epochs.pth
+Epoch [12/15], Train Loss: 0.0003, Val Loss: 0.0026324141586336895
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_12_epochs.pth
+Epoch [13/15], Train Loss: 0.0003, Val Loss: 0.002735568545463616
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_13_epochs.pth
+Epoch [14/15], Train Loss: 0.0003, Val Loss: 0.002716301402762746
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_14_epochs.pth
+Epoch [15/15], Train Loss: 0.0002, Val Loss: 0.0030391857444666453
+Saved model checkpoint: C:\Users\user\Documents\BGU-Master\Transformer-based-UAV-Localization-with-Multi-Sensors\models\decoder\decoder_10sensors_15_epochs.pth

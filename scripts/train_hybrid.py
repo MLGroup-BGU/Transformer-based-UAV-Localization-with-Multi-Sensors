@@ -237,7 +237,7 @@ def main():
     num_layers = 3
     dim_ff = 512
     dropout = 0.1
-    num_epochs = 10
+    num_epochs = 5
     lr = 1e-4
     warmup_positions = 10
 
@@ -269,8 +269,8 @@ def main():
     train_files = get_subcache_files(train_cache_dir, train_path, seq_len=seq_len)
     test_files  = get_subcache_files(test_cache_dir, test_path, seq_len=seq_len)
 
-    estimated_train_batches = max(1, len(train_files) * 2000)
-    estimated_test_batches  = max(1, len(test_files) * 2000)
+    estimated_train_batches = max(1, len(train_files) * 4300)
+    estimated_test_batches  = max(1, len(test_files) * 4300)
 
     model = HybridSpatiotemporalPredictor(
         d_model=d_model, 
@@ -282,14 +282,23 @@ def main():
         static_dim=3,
         coords_dim=3
     )
-
+    #Temp: loading latest version
+    latest_model_path = os.path.join(ROOT_DIR, "models", "encoder", "hybrid_predictor_10sensors_17_epochs.pth")
+    if os.path.exists(latest_model_path):
+        model.load_state_dict(torch.load(latest_model_path, map_location=device))
+        print(f"[*] Loaded model weights from {latest_model_path}")
+    else:
+        print(f"[!] No pre-trained model found at {latest_model_path}. Starting training from scratch.")
     print("Starting Hybrid Training...")
     train_model(model, train_files, test_files, device, 
                 estimated_train_batches, estimated_test_batches,
                 batch_size=batch_size, num_epochs=num_epochs, lr=lr, 
-                warmup_positions=warmup_positions, start_epoch=0, 
+                warmup_positions=warmup_positions, start_epoch=17, 
                 run=None, use_amp=True)
 
 
 if __name__ == "__main__":
+    sys.stdout = open(os.path.join(ROOT_DIR,  "models", "encoder", "train_hybrid_log.txt"), "a")
+    print(f"[*] Logging training output to {os.path.join(ROOT_DIR,  'models', 'encoder', 'train_hybrid_log.txt')}")
+    print(f"[*] Training started at: {pd.Timestamp.now()}")
     main()

@@ -1,57 +1,32 @@
 """
-rssi_predictor.py
+rssi_trilateration_predictor.py
 
-Implementation of the RSSI-Based UAV Localization Predictor.
-Uses multi-sensor Received Signal Strength Indicator (RSSI) power measurements,
-sensor coordinates, drone transmit parameters (P_tx, G_tx, frequency f),
-and simulator propagation multilateration algorithms.
+Implementation of the RSSI Path-Loss Multilateration / Trilateration UAV Predictor.
+Uses multi-sensor RSSI power measurements, sensor coordinates, drone transmit parameters
+(P_tx, G_tx, frequency f), path loss model, and non-linear Gauss-Newton optimization.
 """
 
-import os
-import sys
-import ast
-import re
 import time
-from typing import Dict, Any, Tuple, Optional
+from typing import Dict, Any, Tuple
 import numpy as np
 import pandas as pd
 
 from .base_predictor import BaseUAVPredictor
 
 
-class RSSIPredictor(BaseUAVPredictor):
+class RSSITrilaterationPredictor(BaseUAVPredictor):
     """
-    RSSI-based UAV Localization Predictor.
-    Estimates 3D UAV positions directly from raw RSSI power measurements.
+    RSSI Path-Loss Multilateration / Trilateration UAV Predictor.
+    Estimates 3D UAV positions from raw RSSI power measurements using log-distance path loss propagation.
     """
 
     def __init__(
         self,
         path_loss_exponent: float = 2.0,
-        method: str = "trilateration",
         name: str = "RSSI Path-Loss Multilateration",
     ):
         super().__init__(name=name)
         self.n = path_loss_exponent
-        self.method = method.lower()
-
-    @staticmethod
-    def _parse_sector(val) -> int:
-        if pd.isna(val):
-            return 1
-        if isinstance(val, (int, float, np.integer, np.floating)):
-            return int(val)
-        if isinstance(val, str):
-            try:
-                parsed = ast.literal_eval(val)
-                if isinstance(parsed, list) and len(parsed) > 0:
-                    return int(parsed[0])
-            except Exception:
-                pass
-            match = re.search(r"\d+", val)
-            if match:
-                return int(match.group(0))
-        return 1
 
     def _extract_drone_tx_power(self, drone_info_df: pd.DataFrame, exp_id: Any) -> Tuple[float, float, float]:
         default_ptx = 20.0
@@ -202,10 +177,7 @@ class RSSIPredictor(BaseUAVPredictor):
                 sr_arr = np.array(s_rssis, dtype=float)
                 sg_arr = np.array(s_gains, dtype=float)
 
-                if self.method == "wcl":
-                    pred_pos = self._estimate_position_wcl(sp_arr, sr_arr)
-                else:
-                    pred_pos = self._estimate_position_trilateration(sp_arr, sr_arr, sg_arr, p_tx, g_tx, f_hz)
+                pred_pos = self._estimate_position_trilateration(sp_arr, sr_arr, sg_arr, p_tx, g_tx, f_hz)
             else:
                 pred_pos = np.zeros(3, dtype=float)
 
