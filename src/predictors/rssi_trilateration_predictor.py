@@ -7,11 +7,14 @@ Uses multi-sensor RSSI power measurements, sensor coordinates, drone transmit pa
 """
 
 import time
+import logging
 from typing import Dict, Any, Tuple
 import numpy as np
 import pandas as pd
+from scipy.optimize import least_squares
 
 from .base_predictor import BaseUAVPredictor
+from .rssi_utils import estimate_position_wcl
 
 
 class RSSITrilaterationPredictor(BaseUAVPredictor):
@@ -42,9 +45,15 @@ class RSSITrilaterationPredictor(BaseUAVPredictor):
             matching = drone_info_df
 
         row = matching.iloc[0]
-        p_tx = float(row["drone_transmitter_power"]) if "drone_transmitter_power" in row and not pd.isna(row["drone_transmitter_power"]) else default_ptx
-        g_tx = float(row["transmitter_antenna_gain"]) if "transmitter_antenna_gain" in row and not pd.isna(row["transmitter_antenna_gain"]) else default_gtx
-        f_hz = float(row["center_frequency"]) if "center_frequency" in row and not pd.isna(row["center_frequency"]) else default_freq
+        p_tx = float(row["drone_transmitter_power"]) if "drone_transmitter_power" in row and not pd.isna(row["drone_transmitter_power"]) else (float(row["p_tx"]) if "p_tx" in row and not pd.isna(row["p_tx"]) else None)
+        g_tx = float(row["transmitter_antenna_gain"]) if "transmitter_antenna_gain" in row and not pd.isna(row["transmitter_antenna_gain"]) else (float(row["g_tx"]) if "g_tx" in row and not pd.isna(row["g_tx"]) else None)
+        f_hz = float(row["freq_min"]) if "freq_min" in row and not pd.isna(row["freq_min"]) else (float(row["center_frequency"]) if "center_frequency" in row and not pd.isna(row["center_frequency"]) else None)
+
+        if p_tx is None or g_tx is None or f_hz is None:
+            logging.warning(f"Missing drone TX parameters for exp {exp_id}. Using defaults: P_tx={default_ptx}, G_tx={default_gtx}, f={default_freq}")
+        p_tx = p_tx if p_tx is not None else default_ptx
+        g_tx = g_tx if g_tx is not None else default_gtx
+        f_hz = f_hz if f_hz is not None else default_freq
 
         return p_tx, g_tx, f_hz
 
@@ -52,8 +61,8 @@ class RSSITrilaterationPredictor(BaseUAVPredictor):
         pos_map = {}
 
         if not dist_df.empty:
-            dist_exp_col = "exp_id" if "exp_id" in dist_df.columns else ("experiment_id" if "experiment_id" in dist_df.columns else (dist_df.columns[0] if not dist_df.empty else None))
-            exp_dist = dist_df[dist_df[dist_exp_col] == exp_id] if dist_exp_col and not dist_df.empty else dist_df
+            dist_exp_col = "exp_id" if "exp_id" in dist_df.columns else ("experiment_id" if "experiment_id" in dist_df.columns else None)
+            exp_dist = dist_df[dist_df[dist_exp_col] == exp_id] if dist_exp_col and not dist_df.empty and dist_exp_col in dist_df.columns else dist_df
             for _, r in exp_dist.iterrows():
                 s1, s2 = int(r["sensor1_id"]), int(r["sensor2_id"])
                 if s1 not in pos_map and "x1" in r:
@@ -63,9 +72,15 @@ class RSSITrilaterationPredictor(BaseUAVPredictor):
 
         gain_map = {}
         if not info_df.empty and "gain" in info_df.columns:
-            for _, r in info_df.iterrows():
+            info_exp_col = "experiment_id" if "experiment_id" in info_df.columns else ("exp_id" if "exp_id" in info_df.columns else None)
+            exp_info = info_df[info_df[info_exp_col] == exp_id] if info_exp_col and info_exp_col in info_df.columns else info_df
+            for _, r in exp_info.iterrows():
                 s_id = int(r["sensor_id"])
                 gain_map[s_id] = float(r["gain"])
+            if not gain_map:
+                for _, r in info_df.iterrows():
+                    s_id = int(r["sensor_id"])
+                    gain_map[s_id] = float(r["gain"])
 
         res = {}
         for s_id, pos in pos_map.items():
@@ -73,15 +88,6 @@ class RSSITrilaterationPredictor(BaseUAVPredictor):
             res[s_id] = (pos, g_rx)
 
         return res
-
-    def _estimate_position_wcl(self, sensor_positions: np.ndarray, rssi_values_dbm: np.ndarray) -> np.ndarray:
-        weights = 10.0 ** (rssi_values_dbm / 10.0)
-        total_w = np.sum(weights)
-        if total_w < 1e-12:
-            return np.mean(sensor_positions, axis=0)
-
-        pos_est = np.sum(sensor_positions * weights[:, np.newaxis], axis=0) / total_w
-        return pos_est
 
     def _estimate_position_trilateration(
         self,
@@ -96,10 +102,11 @@ class RSSITrilaterationPredictor(BaseUAVPredictor):
         if K == 0:
             return np.zeros(3, dtype=float)
 
+        # User spec formula: P_rx = P_tx + G_t + G_r - 20log10(d) - 20log10(f) + 147
         offset = 20.0 * np.log10(f_hz) - 147.0
         dists = 10.0 ** ((p_tx + g_tx + sensor_gains_dbi - rssi_values_dbm - offset) / (10.0 * self.n))
 
-        wcl_guess = self._estimate_position_wcl(sensor_positions, rssi_values_dbm)
+        wcl_guess = estimate_position_wcl(sensor_positions, rssi_values_dbm)
 
         if K < 3:
             return wcl_guess
@@ -113,25 +120,38 @@ class RSSITrilaterationPredictor(BaseUAVPredictor):
                 - np.sum(sensor_positions[0] ** 2)
             )
             est_lstsq, _, _, _ = np.linalg.lstsq(A, b, rcond=None)
-            x_est = est_lstsq.copy()
+            initial_guess = est_lstsq.copy()
+            
+            # UAVs fly above the ground sensors. Since sensors are roughly co-planar, 
+            # the linear algebraic Z estimate is unstable and can easily point underground.
+            # We force it to a high positive value so least_squares descends to the correct airborne root.
+            initial_guess[2] = np.abs(initial_guess[2])
+            if initial_guess[2] < 200.0:
+                initial_guess[2] = 1000.0
+                
+        except Exception:
+            initial_guess = wcl_guess.copy()
+            initial_guess[2] += 1000.0
+
+        def residuals_func(x):
+            calc_dists = np.linalg.norm(sensor_positions - x, axis=1)
+            return calc_dists - dists
+
+        # The 'trf' method requires the initial guess to be strictly within the bounds
+        initial_guess = np.clip(initial_guess, 0.0, 5000.0)
+
+        try:
+            res = least_squares(
+                residuals_func, 
+                initial_guess, 
+                bounds=(0.0, 5000.0), 
+                method='trf'
+            )
+            x_est = res.x
         except Exception:
             x_est = wcl_guess.copy()
 
-        for _ in range(15):
-            diffs = x_est - sensor_positions
-            calc_dists = np.linalg.norm(diffs, axis=1) + 1e-8
-            residuals = calc_dists - dists
-            J = diffs / calc_dists[:, np.newaxis]
-
-            try:
-                delta = np.linalg.lstsq(J, residuals, rcond=None)[0]
-                x_est -= delta
-                if np.linalg.norm(delta) < 1e-4:
-                    break
-            except Exception:
-                break
-
-        if np.isnan(x_est).any() or np.isinf(x_est).any() or np.linalg.norm(x_est - wcl_guess) > 50000.0:
+        if np.isnan(x_est).any() or np.isinf(x_est).any():
             return wcl_guess
 
         return x_est
@@ -144,14 +164,19 @@ class RSSITrilaterationPredictor(BaseUAVPredictor):
 
         exp_col = "experiment_id" if "experiment_id" in det_df.columns else "exp_id"
         exp_id = det_df[exp_col].iloc[0] if not det_df.empty else 1
+        if not det_df.empty:
+            det_df = det_df[det_df[exp_col] == exp_id].copy()
 
         p_tx, g_tx, f_hz = self._extract_drone_tx_power(drone_info_df, exp_id)
         sensor_map = self._extract_sensor_positions_and_gains(dist_df, info_df, exp_id)
 
         pow_col = "total_power_dBm" if "total_power_dBm" in det_df.columns else "received_power"
-        det_df["ts_idx"] = det_df.groupby(exp_col, sort=False)["timestamp"].rank(method="dense").astype(int) - 1
-
+        
         start_time = time.perf_counter()
+        
+        unique_ts = np.sort(det_df["timestamp"].unique())
+        ts_map = {t: idx for idx, t in enumerate(unique_ts)}
+        det_df["ts_idx"] = det_df["timestamp"].map(ts_map)
 
         pred_list = []
         ts_list = []

@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 from .base_predictor import BaseUAVPredictor
+from .rssi_utils import estimate_position_wcl
 
 
 class RSSIWCLPredictor(BaseUAVPredictor):
@@ -36,21 +37,14 @@ class RSSIWCLPredictor(BaseUAVPredictor):
                     pos_map[s2] = np.array([r["x2"], r["y2"], r["z2"]], dtype=float)
         return pos_map
 
-    def _estimate_position_wcl(self, sensor_positions: np.ndarray, rssi_values_dbm: np.ndarray) -> np.ndarray:
-        weights = 10.0 ** (rssi_values_dbm / 10.0)
-        total_w = np.sum(weights)
-        if total_w < 1e-12:
-            return np.mean(sensor_positions, axis=0)
-
-        pos_est = np.sum(sensor_positions * weights[:, np.newaxis], axis=0) / total_w
-        return pos_est
-
     def predict_experiment(self, raw_exp_data: Dict[str, Any]) -> Tuple[np.ndarray, np.ndarray, float]:
         det_df = raw_exp_data["detections"].copy()
         dist_df = raw_exp_data.get("sensor_dist", pd.DataFrame())
 
         exp_col = "experiment_id" if "experiment_id" in det_df.columns else "exp_id"
         exp_id = det_df[exp_col].iloc[0] if not det_df.empty else 1
+        if not det_df.empty:
+            det_df = det_df[det_df[exp_col] == exp_id].copy()
 
         dist_exp_col = "exp_id" if "exp_id" in dist_df.columns else ("experiment_id" if "experiment_id" in dist_df.columns else None)
         if dist_exp_col and not dist_df.empty and dist_exp_col in dist_df.columns:
@@ -61,9 +55,12 @@ class RSSIWCLPredictor(BaseUAVPredictor):
         sensor_pos_map = self._extract_sensor_positions(exp_dist_df)
 
         pow_col = "total_power_dBm" if "total_power_dBm" in det_df.columns else "received_power"
-        det_df["ts_idx"] = det_df.groupby(exp_col, sort=False)["timestamp"].rank(method="dense").astype(int) - 1
-
+        
         start_time = time.perf_counter()
+        
+        unique_ts = np.sort(det_df["timestamp"].unique())
+        ts_map = {t: idx for idx, t in enumerate(unique_ts)}
+        det_df["ts_idx"] = det_df["timestamp"].map(ts_map)
 
         pred_list = []
         ts_list = []
@@ -85,7 +82,7 @@ class RSSIWCLPredictor(BaseUAVPredictor):
             if len(s_positions) > 0:
                 sp_arr = np.array(s_positions, dtype=float)
                 sr_arr = np.array(s_rssis, dtype=float)
-                pred_pos = self._estimate_position_wcl(sp_arr, sr_arr)
+                pred_pos = estimate_position_wcl(sp_arr, sr_arr)
             else:
                 pred_pos = np.zeros(3, dtype=float)
 

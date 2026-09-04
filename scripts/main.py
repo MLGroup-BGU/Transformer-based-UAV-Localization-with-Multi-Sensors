@@ -6,6 +6,9 @@ Extracts raw data from test dataset folders, applies noise in linear power domai
 runs predictors, computes side-by-side spatial & computational metrics, and saves outputs.
 """
 
+#from _typeshed import _type_checker_internals
+from pandas._libs.tslibs import timestamps
+from matplotlib import backend_bases
 import os
 import sys
 import argparse
@@ -97,71 +100,66 @@ def load_raw_dataset_files(data_dir: str) -> Dict[str, pd.DataFrame]:
         "drone_traj": traj_df,
     }
 
+def sigma_from_noise_dbm(noise_floor_dbm: float) -> float:
+    """Voltage-domain noise std (sqrt(mW)) for a given noise floor in dBm."""
+    return 10.0 ** (noise_floor_dbm / 20.0)
 
 def apply_noise_to_raw_data(
     raw_data: Dict[str, pd.DataFrame],
-    power_noise_std: float = 0.0,
-    ptx_noise_std: float = 0.0,
-    seed: int = 42,
-    noise_mode: str = "relative",
+    samples_per_timestamp: int,
+    background_noise_dbm: float,
+    detection_threshold_dBm: float = -120.0,
+    min_linear_power: float = 1e-15,
+) -> Dict[str, pd.DataFrame]:
+    """Apply AWGN in the voltage domain; report averaged power."""
+    if samples_per_timestamp < 1:
+        raise ValueError("samples_per_timestamp must be >= 1")
+    if "detections" not in raw_data:
+        raise KeyError("no detections table found")
+
+    det_df = raw_data["detections"].copy()
+    pow_col = ("total_power_dBm" if "total_power_dBm" in det_df.columns
+               else "received_power")
+    if pow_col not in det_df.columns:
+        raise KeyError("no power column found in detections")
+    
+    background_noise_std = sigma_from_noise_dbm(background_noise_dbm)
+    
+    active = (det_df[pow_col] != 0.0) & (det_df[pow_col] > detection_threshold_dBm)
+    n_active = int(active.sum())
+    if n_active == 0:
+        return {**raw_data, "detections": det_df}
+
+    p_lin = 10.0 ** (det_df.loc[active, pow_col].to_numpy(float) / 10.0)
+    v_sig = np.sqrt(p_lin)
+
+    noise = np.random.normal(0.0, background_noise_std,
+                             size=(samples_per_timestamp, n_active))
+    p_noisy = np.mean((v_sig[None, :] + noise) ** 2, axis=0)
+    p_noisy = np.maximum(p_noisy, min_linear_power)
+
+    det_df.loc[active, pow_col] = 10.0 * np.log10(p_noisy)
+    return {**raw_data, "detections": det_df}
+
+
+def apply_ptx_uncertainty_to_raw_data(
+    raw_data: Dict[str, pd.DataFrame],
+    ptx_uncertainty_dbm: float,
 ) -> Dict[str, pd.DataFrame]:
     """
-    Applies Gaussian normal distribution noise in the LINEAR power domain.
+    Applies transmit power (P_tx) uncertainty in dBm directly to the drone_info table.
     """
-    if power_noise_std <= 0.0 and ptx_noise_std <= 0.0:
+    if ptx_uncertainty_dbm == 0.0 or "drone_info" not in raw_data:
         return raw_data
 
-    print(f"\n[INFO] Injecting Gaussian Normal Noise in LINEAR Power Domain (mode={noise_mode}, seed={seed}):")
-    if power_noise_std > 0.0:
-        print(f"  - Received Power Linear Noise Std Dev : {power_noise_std}")
-    if ptx_noise_std > 0.0:
-        print(f"  - Transmit Power (P_tx) Linear Noise Std: {ptx_noise_std}")
+    noisy_data = {k: (v.copy() if isinstance(v, pd.DataFrame) else v) for k, v in raw_data.items()}
+    drone_info_df = noisy_data["drone_info"].copy()
+    ptx_col = "drone_transmitter_power" if "drone_transmitter_power" in drone_info_df.columns else "p_tx"
 
-    noisy_data = {k: v.copy() for k, v in raw_data.items()}
+    if ptx_col in drone_info_df.columns:
+        drone_info_df[ptx_col] = drone_info_df[ptx_col].astype(float) + ptx_uncertainty_dbm
 
-    if seed is not None:
-        np.random.seed(seed)
-
-    if power_noise_std > 0.0 and "detections" in noisy_data:
-        det_df = noisy_data["detections"]
-        pow_col = "total_power_dBm" if "total_power_dBm" in det_df.columns else "received_power"
-        if pow_col in det_df.columns:
-            active_mask = (det_df[pow_col] != 0.0) & (det_df[pow_col] > -120.0)
-            num_active = active_mask.sum()
-            if num_active > 0:
-                p_dbm = det_df.loc[active_mask, pow_col].values.astype(float)
-                p_linear = 10.0 ** (p_dbm / 10.0)
-
-                if noise_mode.lower() == "relative":
-                    noise = np.random.normal(loc=0.0, scale=power_noise_std, size=num_active)
-                    p_linear_noisy = p_linear * (1.0 + noise)
-                else:
-                    noise = np.random.normal(loc=0.0, scale=power_noise_std, size=num_active)
-                    p_linear_noisy = p_linear + noise
-
-                p_linear_noisy = np.maximum(p_linear_noisy, 1e-15)
-                p_dbm_noisy = 10.0 * np.log10(p_linear_noisy)
-                det_df.loc[active_mask, pow_col] = p_dbm_noisy
-
-    if ptx_noise_std > 0.0 and "drone_info" in noisy_data:
-        drone_info_df = noisy_data["drone_info"]
-        ptx_col = "drone_transmitter_power" if "drone_transmitter_power" in drone_info_df.columns else "p_tx"
-        if ptx_col in drone_info_df.columns:
-            num_rows = len(drone_info_df)
-            ptx_dbm = drone_info_df[ptx_col].values.astype(float)
-            ptx_linear = 10.0 ** (ptx_dbm / 10.0)
-
-            if noise_mode.lower() == "relative":
-                noise = np.random.normal(loc=0.0, scale=ptx_noise_std, size=num_rows)
-                ptx_linear_noisy = ptx_linear * (1.0 + noise)
-            else:
-                noise = np.random.normal(loc=0.0, scale=ptx_noise_std, size=num_rows)
-                ptx_linear_noisy = ptx_linear + noise
-
-            ptx_linear_noisy = np.maximum(ptx_linear_noisy, 1e-15)
-            ptx_dbm_noisy = 10.0 * np.log10(ptx_linear_noisy)
-            drone_info_df[ptx_col] = ptx_dbm_noisy
-
+    noisy_data["drone_info"] = drone_info_df
     return noisy_data
 
 
@@ -192,9 +190,8 @@ def evaluate_predictors_on_test_data(
     raw_data: Dict[str, pd.DataFrame],
     max_exps: Optional[int] = None,
     output_dir: Optional[str] = None,
-    power_noise_std: float = 0.0,
-    ptx_noise_std: float = 0.0,
-    noise_mode: str = "relative",
+    background_noise_dbm: float = -110,
+    samples_per_timestamp: int = 1,
     seed: int = 42,
 ) -> pd.DataFrame:
     if output_dir is None:
@@ -203,10 +200,8 @@ def evaluate_predictors_on_test_data(
 
     raw_data_input = apply_noise_to_raw_data(
         raw_data=raw_data,
-        power_noise_std=power_noise_std,
-        ptx_noise_std=ptx_noise_std,
-        noise_mode=noise_mode,
-        seed=seed,
+        background_noise_dbm=background_noise_dbm,
+        samples_per_timestamp=samples_per_timestamp,
     )
 
     det_df = raw_data_input["detections"]
@@ -218,43 +213,49 @@ def evaluate_predictors_on_test_data(
 
     print("\n" + "=" * 75)
     print(f" EVALUATING UAV LOCALIZATION PREDICTORS ON RAW TEST DATA: 5K_4")
-    if power_noise_std > 0.0 or ptx_noise_std > 0.0:
-        print(f" LINEAR NOISE ({noise_mode}): Received Power Std={power_noise_std} | P_tx Std={ptx_noise_std}")
+    print(f" Background noise: {background_noise_dbm} dBm, Samples per timestamp: {samples_per_timestamp}")
     print("=" * 75)
     print(f"Total experiments to evaluate: {len(unique_exps)}")
 
     print("\n[INFO] Initializing predictors...")
-    predictors: List[BaseUAVPredictor] = []
+    predictor_configs = []
 
     try:
         enc_dec_predictor = EncoderDecoderPredictor()
-        predictors.append(enc_dec_predictor)
+        predictor_configs.append(("Encoder-Decoder", enc_dec_predictor, 0.0))
     except FileNotFoundError as e:
         print(f"[WARNING] EncoderDecoderPredictor disabled:\n{e}\n")
 
-    rssi_wcl = RSSIWCLPredictor()
-    predictors.append(rssi_wcl)
-
-    rssi_trilateration = RSSITrilaterationPredictor()
-    predictors.append(rssi_trilateration)
+    rssi_uncertainties = [0.0, 1.0, 3.0, 6.0]
+    for unc in rssi_uncertainties:
+        label = "RSSI Trilateration (Correct P_tx)" if unc == 0.0 else f"RSSI Trilateration ({int(unc)}dBm Uncertainty)"
+        rssi_pred = RSSITrilaterationPredictor(name=label)
+        predictor_configs.append((label, rssi_pred, unc))
 
     summary_rows = []
     all_exp_predictions = []
 
-    for pred in predictors:
-        print(f"\n---> Running evaluation for: {pred.name}...")
+    for pred_name, pred, ptx_unc in predictor_configs:
+        print(f"\n---> Running evaluation for: {pred_name}...")
+
+        if ptx_unc != 0.0:
+            exp_raw_data = apply_ptx_uncertainty_to_raw_data(raw_data_input, ptx_unc)
+        else:
+            exp_raw_data = raw_data_input
+
+        exp_det_df = exp_raw_data["detections"]
 
         all_pred_list, all_true_list, all_ts_list = [], [], []
         total_time_accum = 0.0
 
-        for exp_id in tqdm(unique_exps, desc=f"Evaluating {pred.name}"):
-            exp_det = det_df[det_df[exp_col] == exp_id].copy()
+        for exp_id in tqdm(unique_exps, desc=f"Evaluating {pred_name}"):
+            exp_det = exp_det_df[exp_det_df[exp_col] == exp_id].copy()
 
             raw_exp_input = {
                 "detections": exp_det,
-                "sensor_info": raw_data_input["sensor_info"],
-                "sensor_dist": raw_data_input["sensor_dist"],
-                "drone_info": raw_data_input["drone_info"],
+                "sensor_info": exp_raw_data["sensor_info"],
+                "sensor_dist": exp_raw_data["sensor_dist"],
+                "drone_info": exp_raw_data["drone_info"],
             }
 
             pred_xyz_m, timestamps, proc_time_sec = pred.predict_experiment(raw_exp_input)
@@ -271,21 +272,18 @@ def evaluate_predictors_on_test_data(
         ts_concat = np.concatenate(all_ts_list, axis=0)
 
         metrics, detailed_df = pred.evaluate(pred_concat, true_concat, ts_concat, total_time_accum)
+        metrics["Predictor_Name"] = pred_name
         summary_rows.append(metrics)
 
-        detailed_df["predictor_name"] = pred.name
+        detailed_df["predictor_name"] = pred_name
         all_exp_predictions.append(detailed_df)
 
         print(pred.format_metrics_summary(metrics))
 
     summary_df = pd.DataFrame(summary_rows)
 
-    if power_noise_std > 0.0 or ptx_noise_std > 0.0:
-        summary_csv_path = os.path.join(output_dir, f"5K_4_summary_linear_noise_pwr{power_noise_std}_ptx{ptx_noise_std}.csv")
-        predictions_csv_path = os.path.join(output_dir, f"5K_4_predictions_linear_noise_pwr{power_noise_std}_ptx{ptx_noise_std}.csv")
-    else:
-        summary_csv_path = os.path.join(output_dir, "5K_4_evaluation_comparison_summary.csv")
-        predictions_csv_path = os.path.join(output_dir, "5K_4_detailed_predictions.csv")
+    summary_csv_path = os.path.join(output_dir, f"5K_4_summary_background_noise_{background_noise_dbm}_samples_{samples_per_timestamp}.csv")
+    predictions_csv_path = os.path.join(output_dir, f"5K_4_predictions_background_noise_{background_noise_dbm}_samples_{samples_per_timestamp}.csv")
 
     summary_df.to_csv(summary_csv_path, index=False)
 
@@ -314,25 +312,43 @@ def evaluate_predictors_on_test_data(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Evaluate UAV Localization Predictors on raw 5K_4 test dataset.")
-    parser.add_argument("--max_exps", type=int, default=None, help="Maximum number of experiments to evaluate (default: all).")
-    parser.add_argument("--power_noise_std", type=float, default=0.0, help="Std dev of Gaussian normal noise applied in LINEAR power domain (mW).")
-    parser.add_argument("--ptx_noise_std", type=float, default=0.0, help="Std dev of Gaussian normal noise applied in LINEAR transmit power domain (mW).")
-    parser.add_argument("--noise_mode", type=str, default="relative", choices=["relative", "absolute"], help="Linear noise mode: 'relative' or 'absolute'.")
-    parser.add_argument("--seed", type=int, default=42, help="Random seed for reproducible noise generation (default: 42).")
-    parser.add_argument("--output_dir", type=str, default=None, help="Directory to save evaluation summary CSVs.")
-
-    args = parser.parse_args()
+    MAX_EXPS = 100  # Set to an integer (e.g., 100) or None to evaluate all experiments
+    noise_floors_dbm = [-90.0, -100.0, -110.0]
+    samples_per_ts_list = [1, 10, 100]
 
     data_5k4_dir = resolve_5k4_data_dir()
     raw_dataset = load_raw_dataset_files(data_5k4_dir)
 
-    evaluate_predictors_on_test_data(
-        raw_data=raw_dataset,
-        max_exps=args.max_exps,
-        output_dir=args.output_dir,
-        power_noise_std=args.power_noise_std,
-        ptx_noise_std=args.ptx_noise_std,
-        noise_mode=args.noise_mode,
-        seed=args.seed,
-    )
+    output_dir = os.path.join(ROOT_DIR, "outputs")
+    os.makedirs(output_dir, exist_ok=True)
+
+    all_grid_summaries = []
+
+    for noise_dbm in noise_floors_dbm:
+        for samples_ts in samples_per_ts_list:
+            print("\n" + "#" * 80)
+            print(f" RUNNING EXPERIMENT: Noise = {noise_dbm} dBm | Samples/Timestamp = {samples_ts}")
+            print("#" * 80)
+
+            summary_df = evaluate_predictors_on_test_data(
+                raw_data=raw_dataset,
+                max_exps=MAX_EXPS,
+                output_dir=output_dir,
+                background_noise_dbm=noise_dbm,
+                samples_per_timestamp=samples_ts,
+            )
+
+            summary_df["Background_Noise_dBm"] = noise_dbm
+            summary_df["Samples_Per_Timestamp"] = samples_ts
+            all_grid_summaries.append(summary_df)
+
+    if all_grid_summaries:
+        full_grid_df = pd.concat(all_grid_summaries, ignore_index=True)
+        full_grid_csv_path = os.path.join(output_dir, "5K_4_full_grid_summary.csv")
+        full_grid_df.to_csv(full_grid_csv_path, index=False)
+        print("\n" + "=" * 85)
+        print(" MASTER EXPERIMENT GRID SUMMARY SAVED")
+        print("=" * 85)
+        print(f" Combined Summary CSV saved to: {full_grid_csv_path}")
+
+
