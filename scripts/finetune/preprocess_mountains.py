@@ -20,7 +20,7 @@ is stored as a compact block of rows plus per-experiment offsets:
     <cache_dir>/<tag>_offsets.npy  int64   [num_experiments + 1]
 
 Sliding windows (seq_len rows, step 1) are cut on the fly by finetune_decoder.py, exactly like
-scripts/build_dataset_cache.py does (rows of an experiment sorted by time_step, window = rows[i:i+seq_len]).
+scripts/data/build_dataset_cache.py does (rows of an experiment sorted by time_step, window = rows[i:i+seq_len]).
 
 Anomaly files are ignored. Files whose name contains "test" go to the validation cache.
 """

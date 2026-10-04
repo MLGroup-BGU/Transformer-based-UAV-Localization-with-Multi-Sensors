@@ -6,8 +6,8 @@ Continues the Mountains decoder fine-tuning from the latest checkpoint in checkp
 loss history, then trains --epochs more epochs numbered N+1, N+2, ...
 
 Accepts the same arguments as finetune_decoder.py, e.g.:
-    python scripts/fine-tuned-models/resume_finetune.py
-    python scripts/fine-tuned-models/resume_finetune.py --epochs 5 --lr 5e-6
+    python scripts/finetune/resume_finetune.py
+    python scripts/finetune/resume_finetune.py --epochs 5 --lr 5e-6
 """
 
 from finetune_decoder import run

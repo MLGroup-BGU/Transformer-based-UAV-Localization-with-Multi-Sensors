@@ -20,7 +20,7 @@ from tqdm import tqdm
 
 # Add project root to sys.path
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
+ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, "..", ".."))
 if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
 
@@ -57,7 +57,7 @@ def resolve_5k4_data_dir() -> str:
     raise FileNotFoundError(
         f"Could not locate raw test dataset folder containing 'sensor_detection_summary.csv'. Checked locations:\n"
         + "\n".join(f" - {p}" for p in candidate_paths)
-        + "\n\nPlease run 'python data/download_drive_data.py' or verify that raw CSV datasets exist in 'data/'."
+        + "\n\nPlease run 'python scripts/data/download_drive_data.py' or verify that raw CSV datasets exist in 'data/'."
     )
 
 

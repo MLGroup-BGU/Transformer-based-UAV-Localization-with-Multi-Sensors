@@ -13,8 +13,8 @@ import gdown
 FOLDER_URL = "https://drive.google.com/drive/folders/1bmBIccwiHu3yUCBgTqCKlSPnKdro-c0-"
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
-MANIFEST_FILE = os.path.join(SCRIPT_DIR, "gdrive_manifest.json")
+ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, "..", ".."))
+MANIFEST_FILE = os.path.join(ROOT_DIR, "Data", "gdrive_manifest.json")
 OUTPUT_BASE_DIR = os.path.join(ROOT_DIR, "data")
 MAX_RETRIES = 5
 RETRY_DELAY = 3

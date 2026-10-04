@@ -1,0 +1,5 @@
+python "%~dp0main_20sens.py" --power_noise_std 0.00 --max_exps 100 --ptx_noise_std 0.0 --output_dir "%~dp0..\outputs\rssi_exp_20sensors\results_rssi_0"
+python "%~dp0main_20sens.py" --power_noise_std 0.01 --max_exps 100 --ptx_noise_std 0.0 --output_dir "%~dp0..\outputs\rssi_exp_20sensors\results_rssi_01"
+python "%~dp0main_20sens.py" --power_noise_std 0.02 --max_exps 100 --ptx_noise_std 0.0 --output_dir "%~dp0..\outputs\rssi_exp_20sensors\results_rssi_02"
+python "%~dp0main_20sens.py" --power_noise_std 0.03 --max_exps 100 --ptx_noise_std 0.0 --output_dir "%~dp0..\outputs\rssi_exp_20sensors\results_rssi_03"
+python "%~dp0main_20sens.py" --power_noise_std 0.04 --max_exps 100 --ptx_noise_std 0.0 --output_dir "%~dp0..\outputs\rssi_exp_20sensors\results_rssi_04"

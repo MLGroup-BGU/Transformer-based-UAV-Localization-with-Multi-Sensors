@@ -1,7 +1,7 @@
 """
-train_hybrid.py
+train_lstm.py
 
-Script to train the Transformer Encoder (HybridSpatiotemporalPredictor).
+Script to train the LSTM Decoder using hidden state representations from the trained Transformer Encoder.
 """
 
 import sys
@@ -13,7 +13,6 @@ import pandas as pd
 import numpy as np
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader, Dataset, IterableDataset
 from tqdm import tqdm
 
 try:
@@ -21,21 +20,17 @@ try:
 except ImportError:
     plt = None
 
-try:
-    import comet_ml
-except ImportError:
-    comet_ml = None
-
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
+ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, "..", ".."))
 if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
 
 from src.models.hybrid_encoder import HybridSpatiotemporalPredictor
-from scripts.build_dataset_cache import build_tensor_cache, _resolve_csv_paths
+from src.models.lstm_decoder import LSTMDecoder
+from scripts.data.build_dataset_cache import build_tensor_cache, _resolve_csv_paths
 
 
-class SubcacheSequenceDataset(Dataset):
+class SubcacheSequenceDataset(torch.utils.data.Dataset):
     """
     Map-style PyTorch dataset loaded from a single subcache block file (subcache_*.pt).
     """
@@ -61,7 +56,7 @@ def get_subcache_files(cache_dir, csv_source, seq_len=40):
     return files
 
 
-def plot_losses(train_losses, val_losses, output_path="hybrid_train_val_loss.png"):
+def plot_losses(train_losses, val_losses, output_path="lstm_train_val_loss.png"):
     if plt is None:
         print("[Warning] matplotlib is not installed. Skipping plot generation.")
         return
@@ -72,7 +67,7 @@ def plot_losses(train_losses, val_losses, output_path="hybrid_train_val_loss.png
     plt.plot(epochs, val_losses, label="Validation Loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
-    plt.title("Training & Validation Loss")
+    plt.title("LSTM Decoder Training & Validation Loss")
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
@@ -80,24 +75,27 @@ def plot_losses(train_losses, val_losses, output_path="hybrid_train_val_loss.png
     plt.close()
 
 
-def train_model(model, train_files, test_files, device, estimated_train_batches, estimated_test_batches,
-                batch_size=512, num_epochs=10, lr=1e-4, warmup_positions=10, start_epoch=0, run=None, use_amp=True,
-                save_dir=None):
+def train_lstm_decoder(encoder, decoder, train_files, test_files, device, 
+                       estimated_train_batches, estimated_test_batches, 
+                       optimizer, batch_size=512, num_epochs=10, start_epoch=0, save_dir=None):
     if save_dir is None:
-        save_dir = os.path.join(ROOT_DIR, "models", "encoder")
+        save_dir = os.path.join(ROOT_DIR, "models", "decoder")
     os.makedirs(save_dir, exist_ok=True)
 
     train_losses = []
     val_losses = []
 
-    criterion = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-    scaler = torch.amp.GradScaler('cuda', enabled=(use_amp and device.type == 'cuda'))
+    encoder.eval()
+    for param in encoder.parameters():
+        param.requires_grad = False
 
-    model.to(device)
+    decoder.to(device)
+    encoder.to(device)
+    criterion = nn.MSELoss()
 
     for epoch in range(num_epochs):
-        model.train()
+        encoder.eval()
+        decoder.train()
         total_loss = 0
         num_batches = 0
 
@@ -105,7 +103,7 @@ def train_model(model, train_files, test_files, device, estimated_train_batches,
         random.shuffle(current_train_files)
 
         pbar = tqdm(desc=f"Epoch {start_epoch+epoch+1}/{start_epoch+num_epochs} [Train]", 
-                    total=estimated_train_batches, unit="batch", dynamic_ncols=True)  
+                    total=estimated_train_batches, unit="batch", dynamic_ncols=True)
 
         for subcache_path in current_train_files:
             try:
@@ -115,40 +113,36 @@ def train_model(model, train_files, test_files, device, estimated_train_batches,
 
                 try:
                     X_data = sub_dataset.X.pin_memory()
-                    Y_data = sub_dataset.Y.pin_memory()
                 except Exception:
                     X_data = sub_dataset.X
-                    Y_data = sub_dataset.Y
 
                 for i in range(0, N, batch_size):
                     batch_idx = perm[i : i + batch_size]
                     x = X_data[batch_idx].to(device, non_blocking=True)
-                    y = Y_data[batch_idx].to(device, non_blocking=True)
+
+                    dynamic_features = x[:, :, 3:9]   # sector_1 to sector_6
+                    spatial_coords   = x[:, :, 9:12]  # sensor_x, sensor_y, sensor_z
+                    static_features  = x[:, :, 12:15] # gain, sinr_threshold, sensitivity
+
+                    with torch.no_grad():
+                        encoder_outputs = encoder.get_hidden_state(dynamic_features, static_features, spatial_coords, layer_idx='embedding')
+
+                    pred_xyz_seq = decoder(encoder_outputs)  # [batch, seq_len, 3]
+                    
+                    target_xyz = x[:, -1, 15:18]             # [batch, 3] target at last timestep
+                    pred_xyz = pred_xyz_seq[:, -1, :]        # [batch, 3] prediction at last timestep
+
+                    loss = criterion(pred_xyz, target_xyz)
 
                     optimizer.zero_grad()
-                    
-                    dynamic_features = x[:, :, 3:9]   # sector_1 to sector_6
-                    spatial_coords   = x[:, :, 9:12]  # x, y, z
-                    static_features  = x[:, :, 12:15] # gain, sinr_threshold, sensitivity
-                    
-                    with torch.amp.autocast('cuda', enabled=(use_amp and device.type == 'cuda')):
-                        output = model(
-                            dynamic_features=dynamic_features, 
-                            static_features=static_features, 
-                            spatial_coords=spatial_coords
-                        )  
-                        
-                        loss = criterion(output[:, warmup_positions:, :], y[:, warmup_positions:, 3:9])  
-                    
-                    scaler.scale(loss).backward()
-                    scaler.step(optimizer)
-                    scaler.update()
-                    
+                    loss.backward()
+                    optimizer.step()
+
                     total_loss += loss.item()
                     num_batches += 1
                     pbar.update(1)
 
-                del sub_dataset, X_data, Y_data
+                del sub_dataset, X_data
                 if device.type == 'cuda':
                     torch.cuda.empty_cache()
 
@@ -159,12 +153,11 @@ def train_model(model, train_files, test_files, device, estimated_train_batches,
 
         avg_train_loss = total_loss / num_batches if num_batches > 0 else 0.0
         train_losses.append(avg_train_loss)
-        if run:
-            run.log_metric("train/batch_loss", avg_train_loss)
 
         avg_val_loss = None
         if test_files:
-            model.eval()
+            decoder.eval()
+            encoder.eval()
             total_val_loss = 0
             val_num_batches = 0
 
@@ -179,34 +172,30 @@ def train_model(model, train_files, test_files, device, estimated_train_batches,
 
                         try:
                             X_data = sub_dataset.X.pin_memory()
-                            Y_data = sub_dataset.Y.pin_memory()
                         except Exception:
                             X_data = sub_dataset.X
-                            Y_data = sub_dataset.Y
 
                         for i in range(0, N, batch_size):
                             batch_idx = slice(i, i + batch_size)
                             x = X_data[batch_idx].to(device, non_blocking=True)
-                            y = Y_data[batch_idx].to(device, non_blocking=True)
-                            
+
                             dynamic_features = x[:, :, 3:9]
-                            spatial_coords   = x[:, :, 9:12] 
+                            spatial_coords   = x[:, :, 9:12]
                             static_features  = x[:, :, 12:15]
-                            
-                            with torch.amp.autocast('cuda', enabled=(use_amp and device.type == 'cuda')):
-                                output = model(
-                                    dynamic_features=dynamic_features, 
-                                    static_features=static_features, 
-                                    spatial_coords=spatial_coords
-                                )  
-                                
-                                loss = criterion(output[:, warmup_positions:, :], y[:, warmup_positions:, 3:9])
+
+                            encoder_outputs = encoder.get_hidden_state(dynamic_features, static_features, spatial_coords, layer_idx='embedding')
+
+                            pred_xyz_seq = decoder(encoder_outputs)
+                            target_xyz = x[:, -1, 15:18]
+                            pred_xyz = pred_xyz_seq[:, -1, :]
+
+                            loss = criterion(pred_xyz, target_xyz)
 
                             total_val_loss += loss.item()
                             val_num_batches += 1
                             pbar_val.update(1)
 
-                        del sub_dataset, X_data, Y_data
+                        del sub_dataset, X_data
                         if device.type == 'cuda':
                             torch.cuda.empty_cache()
 
@@ -216,17 +205,20 @@ def train_model(model, train_files, test_files, device, estimated_train_batches,
             pbar_val.close()
             avg_val_loss = total_val_loss / val_num_batches if val_num_batches > 0 else 0.0
             val_losses.append(avg_val_loss)
-            if run:
-                run.log_metric("val/batch_loss", avg_val_loss)
 
-            print(f"Epoch [{epoch+1}/{num_epochs}], Train Loss: {avg_train_loss:.4f}, Val Loss: {avg_val_loss if avg_val_loss else 'N/A'}")
+            print(f"Epoch [{start_epoch+epoch+1}/{start_epoch+num_epochs}], Train Loss: {avg_train_loss:.4f}, Val Loss: {avg_val_loss if avg_val_loss is not None else 'N/A'}")
 
-            save_path = os.path.join(save_dir, f"hybrid_predictor_10sensors_{start_epoch+epoch+1}_epochs.pth")
-            torch.save(model.state_dict(), save_path)
+            save_path = os.path.join(save_dir, f"decoder_10sensors_{start_epoch+epoch+1}_epochs.pth")
+            torch.save({
+                'epoch': start_epoch + epoch + 1,
+                'decoder_state_dict': decoder.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': avg_train_loss,
+            }, save_path)
             print(f"Saved model checkpoint: {save_path}")
-    
-    plot_losses(train_losses, val_losses, output_path=os.path.join(ROOT_DIR, "outputs", "hybrid_train_val_loss.png"))
-    return model
+
+    plot_losses(train_losses, val_losses, output_path=os.path.join(ROOT_DIR, "outputs", "lstm_train_val_loss.png"))
+    return decoder
 
 
 def main():
@@ -237,9 +229,8 @@ def main():
     num_layers = 3
     dim_ff = 512
     dropout = 0.1
-    num_epochs = 5
+    num_epochs = 15
     lr = 1e-4
-    warmup_positions = 10
 
     train_path = os.path.join(ROOT_DIR, "data", "train_data_10_sensors_zsectors_ptx_model_preprocessing")
     if not os.path.exists(train_path):
@@ -249,10 +240,12 @@ def main():
     if not os.path.exists(test_path):
         test_path = os.path.join(ROOT_DIR, "Data", "test_data_10_sensors_zsectors_ptx_model_preprocessing")
 
+    encoder_ckpt_path = os.path.join(ROOT_DIR, "models", "encoder", "hybrid_predictor_10sensors_16_epochs.pth")
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     print("\n==================================================")
-    print("  Hybrid Spatiotemporal Predictor Training       ")
+    print("  LSTM Decoder Training                            ")
     print("==================================================")
     print(f"[*] PyTorch Version : {torch.__version__}")
     if torch.cuda.is_available():
@@ -272,7 +265,8 @@ def main():
     estimated_train_batches = max(1, len(train_files) * 4300)
     estimated_test_batches  = max(1, len(test_files) * 4300)
 
-    model = HybridSpatiotemporalPredictor(
+    # Initialize pre-trained Encoder
+    encoder = HybridSpatiotemporalPredictor(
         d_model=d_model, 
         nhead=num_heads, 
         num_layers=num_layers, 
@@ -282,23 +276,50 @@ def main():
         static_dim=3,
         coords_dim=3
     )
-    #Temp: loading latest version
-    latest_model_path = os.path.join(ROOT_DIR, "models", "encoder", "hybrid_predictor_10sensors_17_epochs.pth")
-    if os.path.exists(latest_model_path):
-        model.load_state_dict(torch.load(latest_model_path, map_location=device))
-        print(f"[*] Loaded model weights from {latest_model_path}")
+
+    if os.path.exists(encoder_ckpt_path):
+        encoder.load_state_dict(torch.load(encoder_ckpt_path, map_location=device))
+        print(f"[*] Loaded pre-trained encoder weights from: {encoder_ckpt_path}")
     else:
-        print(f"[!] No pre-trained model found at {latest_model_path}. Starting training from scratch.")
-    print("Starting Hybrid Training...")
-    train_model(model, train_files, test_files, device, 
-                estimated_train_batches, estimated_test_batches,
-                batch_size=batch_size, num_epochs=num_epochs, lr=lr, 
-                warmup_positions=warmup_positions, start_epoch=17, 
-                run=None, use_amp=True)
+        print(f"[!] Warning: Pre-trained encoder weights NOT found at: {encoder_ckpt_path}")
+
+    # Initialize LSTM Decoder from scratch
+    decoder = LSTMDecoder(
+        input_size=d_model,
+        hidden_size=d_model * 2,
+        num_layers=2,
+        dropout=dropout,
+        output_size=3
+    )
+    print("[*] Initialized LSTM Decoder (training from scratch)")
+
+    optimizer = torch.optim.Adam(decoder.parameters(), lr=lr)
+
+    save_dir = os.path.join(ROOT_DIR, "models", "decoder")
+    os.makedirs(save_dir, exist_ok=True)
+
+    print("Starting LSTM Decoder Training...")
+    train_lstm_decoder(
+        encoder=encoder,
+        decoder=decoder,
+        train_files=train_files,
+        test_files=test_files,
+        device=device,
+        estimated_train_batches=estimated_train_batches,
+        estimated_test_batches=estimated_test_batches,
+        optimizer=optimizer,
+        batch_size=batch_size,
+        num_epochs=num_epochs,
+        start_epoch=0,
+        save_dir=save_dir
+    )
 
 
 if __name__ == "__main__":
-    sys.stdout = open(os.path.join(ROOT_DIR,  "models", "encoder", "train_hybrid_log.txt"), "a")
-    print(f"[*] Logging training output to {os.path.join(ROOT_DIR,  'models', 'encoder', 'train_hybrid_log.txt')}")
+    log_dir = os.path.join(ROOT_DIR, "models", "decoder")
+    os.makedirs(log_dir, exist_ok=True)
+    log_file = os.path.join(log_dir, "train_lstm_log.txt")
+    sys.stdout = open(log_file, "a")
+    print(f"[*] Logging training output to {log_file}")
     print(f"[*] Training started at: {pd.Timestamp.now()}")
     main()

@@ -38,6 +38,25 @@ The encoder fuses dynamic RSSI readings per antenna sector (up to 6 sectors per 
 
 ---
 
+## Repository Layout
+
+```
+main.py              Root entry point -> scripts/evaluate/eval_noise_grid.py
+src/                 Library code: models/, predictors/, postprocessing/
+scripts/
+  data/              download, preprocess, build tensor cache
+  train/             train_hybrid.py, train_lstm.py, train_xgboost.py
+  evaluate/          eval_noise_grid.py, rssi_exp.bat
+  finetune/          Mountains decoder fine-tuning + evaluation
+  analysis/          data_analysis.py, plot_results.py, experiment viewers
+models/              encoder/, decoder/, xgboost/ checkpoints
+outputs/             All evaluation results and plots
+Data/                Datasets and caches (local, not in git)
+archive/             Legacy scripts and superseded outputs (see archive/README.md)
+```
+
+---
+
 ## Setup
 
 ```bash
@@ -52,25 +71,25 @@ pip install -r requirements.txt
 
 ### 1. Download Raw Data
 ```bash
-python data/download_drive_data.py
+python scripts/data/download_drive_data.py
 ```
 Places raw sensor CSVs in `data/train_data_10_sensors_zsectors_ptx_model_preprocessing/` and `data/test_data_10_sensors_zsectors_ptx_model_preprocessing/`.
 
 ### 2. Preprocess & Normalize
 ```bash
-python data/data_preprocessing.py
+python scripts/data/data_preprocessing.py
 ```
 Merges sensor positions, hardware parameters, and sector detections into a dense `10 sensors × T timestamps` grid. Spatial coordinates are scaled to km (÷1000), SINR threshold (÷10), sensitivity (÷90).
 
 ### 3. Build Tensor Cache
 ```bash
-python scripts/build_dataset_cache.py
+python scripts/data/build_dataset_cache.py
 ```
 Converts preprocessed CSVs into memory-mapped PyTorch tensor blocks at `data/cache/{train,test}/subcache_*.pt`.
 
 ### 4. Train the Model
 ```bash
-python scripts/train_hybrid.py
+python scripts/train/train_hybrid.py
 ```
 
 | Hyperparameter | Value |
@@ -86,7 +105,7 @@ Checkpoints are saved per epoch to `models/encoder/`. The predictor automaticall
 
 ### 5. Train the LSTM Decoder
 ```bash
-python scripts/train_lstm.py
+python scripts/train/train_lstm.py
 ```
 
 Requires the encoder checkpoint from step 4 at its best val loss (We used the 16 epochs checkpoint). The encoder weights are frozen during this phase — only the LSTM decoder is trained from scratch using the encoder's hidden state representations as input.
@@ -116,19 +135,20 @@ python main.py --max_exps 10 --output_dir outputs/
 ```
 
 ### Noise robustness experiment
-Noise is injected in the **linear power domain** ($P_{\text{linear}} = 10^{P_{\text{dBm}}/10}$) to simulate measurement uncertainty:
+`main.py` (→ `scripts/evaluate/eval_noise_grid.py`) evaluates over a grid of background noise floors (dBm) and samples per timestamp:
 
 ```bash
-# Single noise level (5% relative std)
-python main.py --power_noise_std 0.05 --output_dir outputs/results_rssi_05
+python main.py --noise_floors -90 -100 -110 --samples_per_ts 1 10 100 --max_exps 100
 
-# Full noise sweep (1%–10%) via batch script
-scripts/rssi_exp.bat
+# Sensor-count sweep (3/4/5/8/15/20 sensors) -> outputs/rssi_exp_{N}sensors/
+scripts\evaluate\rssi_exp.bat
 ```
+
+The older linear-power-domain noise runner is kept in `archive/scripts/main_20sens.py` (see `archive/README.md`).
 
 ### Plot results
 ```bash
-python src/utils/plot_results.py --base_dir outputs
+python scripts/analysis/plot_results.py --base_dir outputs
 ```
 
 Generates plots under `outputs/plots/`: error vs. noise curves, CDF plots, trajectory comparisons, latency charts.
@@ -170,18 +190,19 @@ The dataset (`5K_4`) covers realistic UAV trajectories over a 5 km × 5 km area 
 
 ## CLI Reference
 
-### `main.py` / `scripts/main.py`
+### `main.py` / `scripts/evaluate/eval_noise_grid.py`
 
 | Flag | Default | Description |
 |---|---|---|
-| `--max_exps` | all | Max experiments to evaluate |
-| `--power_noise_std` | 0.0 | Gaussian noise std on received power (linear, relative) |
-| `--ptx_noise_std` | 0.0 | Gaussian noise std on transmit power (linear, relative) |
-| `--noise_mode` | `relative` | `relative` (% multiplier) or `absolute` (mW) |
-| `--seed` | 42 | Random seed for noise reproducibility |
+| `--data_dir` | auto (`Data/test_data_.../5K_4`) | Raw dataset folder |
+| `--num_sensors` | 10 | Number of sensors |
+| `--sequence_size` | 40 | Window size for the Encoder-Decoder |
+| `--max_exps` | 100 | Max experiments to evaluate |
+| `--noise_floors` | -90 -100 -110 | Background noise floors (dBm) |
+| `--samples_per_ts` | 1 10 100 | Samples per timestamp |
 | `--output_dir` | `outputs/` | Output folder for result CSVs |
 
-### `src/utils/plot_results.py`
+### `scripts/analysis/plot_results.py`
 
 | Flag | Default | Description |
 |---|---|---|

@@ -24,21 +24,37 @@ This document provides exact mathematical formulations of all RSSI localization 
 
 ## Script Directory Structure & Overview
 
+```
+scripts/
+├── data/       build_dataset_cache.py, data_preprocessing.py, download_drive_data.py
+├── train/      train_hybrid.py, train_lstm.py, train_xgboost.py
+├── evaluate/   eval_noise_grid.py, rssi_exp.bat
+├── finetune/   preprocess_mountains.py, finetune_decoder.py, resume_finetune.py, eval_mountains.py
+│               (+ cache/, checkpoints/, outputs/ — local only, git-ignored)
+└── analysis/   data_analysis.py, plot_results.py, visualize_experiment.py, visualize_experiment_html.py
+```
+
 | Script / File | Description | Source Reference |
 | :--- | :--- | :--- |
-| `main.py` | Primary evaluation runner for baseline RSSI predictors (WCL, Trilateration) and test datasets with synthetic noise options. | [main.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/scripts/main.py) |
-| `train_xgboost.py` | Trains XGBoost gradient boosting post-processing regressors to refine $(x, y, z)$ trajectory predictions. | [train_xgboost.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/scripts/train_xgboost.py) |
-| `train_hybrid.py` | Trains the Spatiotemporal Hybrid Transformer Encoder model on multi-sensor dataset arrays. | [train_hybrid.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/scripts/train_hybrid.py) |
-| `train_lstm.py` | Trains the LSTM sequence decoder model for temporal trajectory prediction. | [train_lstm.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/scripts/train_lstm.py) |
-| `build_dataset_cache.py` | Pre-processes raw dataset folders into fast binary HDF5/NPY tensor caches. | [build_dataset_cache.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/scripts/build_dataset_cache.py) |
-| `rssi_exp.bat` | Windows batch script to sweep noise levels from $\sigma = 0.00$ to $0.10$ in steps of $0.01$. | [rssi_exp.bat](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/scripts/rssi_exp.bat) |
+| `evaluate/eval_noise_grid.py` | Evaluation runner (Encoder-Decoder, Trilateration) over a background-noise-floor × samples-per-timestamp grid. Also launched by the root `main.py`. | [eval_noise_grid.py](evaluate/eval_noise_grid.py) |
+| `evaluate/rssi_exp.bat` | Runs the grid evaluation for 3/4/5/8/15/20-sensor datasets into `outputs/rssi_exp_{N}sensors`. Works from any folder. | [rssi_exp.bat](evaluate/rssi_exp.bat) |
+| `train/train_xgboost.py` | Trains XGBoost gradient boosting post-processing regressors to refine $(x, y, z)$ trajectory predictions. | [train_xgboost.py](train/train_xgboost.py) |
+| `train/train_hybrid.py` | Trains the Spatiotemporal Hybrid Transformer Encoder model on multi-sensor dataset arrays. | [train_hybrid.py](train/train_hybrid.py) |
+| `train/train_lstm.py` | Trains the LSTM sequence decoder model for temporal trajectory prediction. | [train_lstm.py](train/train_lstm.py) |
+| `data/build_dataset_cache.py` | Converts `normalized_data.csv` folders into `Data/cache/{train,test}/subcache_*.pt` tensor caches. | [build_dataset_cache.py](data/build_dataset_cache.py) |
+| `data/data_preprocessing.py` | Joins the raw train CSVs into `normalized_data.csv` per `5K_*` folder. | [data_preprocessing.py](data/data_preprocessing.py) |
+| `data/download_drive_data.py` | Downloads the training dataset from Google Drive (manifest: `Data/gdrive_manifest.json`). | [download_drive_data.py](data/download_drive_data.py) |
+| `finetune/*` | Mountains-terrain decoder fine-tuning: preprocess → fine-tune / resume → evaluate. | [finetune/](finetune/) |
+| `analysis/*` | Dataset statistics, result plots, and the interactive experiment viewers. | [analysis/](analysis/) |
+
+Legacy scripts (the linear-noise `main 20sens.py` runner and its batch file) are in [`archive/`](../archive/README.md).
 
 ---
 
 ## Exact Mathematical Explanation of RSSI Algorithms
 
 ### 1. Weighted Centroid Localization (WCL)
-* **Code Reference**: [rssi_wcl_predictor.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/src/predictors/rssi_wcl_predictor.py#L17-L97) & [rssi_utils.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/src/predictors/rssi_utils.py#L8-L25)
+* **Code Reference**: [rssi_wcl_predictor.py](../src/predictors/rssi_wcl_predictor.py#L17-L97) & [rssi_utils.py](../src/predictors/rssi_utils.py#L8-L25)
 
 Weighted Centroid Localization estimates the 3D UAV coordinate $\hat{\mathbf{p}}_{\text{WCL}} = (\hat{x}, \hat{y}, \hat{z}) \in \mathbb{R}^3$ as a weighted linear combination of ground sensor positions $\mathbf{s}_i = (x_i, y_i, z_i) \in \mathbb{R}^3$ for active sensors $i = 1, \dots, N$.
 
@@ -58,7 +74,7 @@ Weighted Centroid Localization estimates the 3D UAV coordinate $\hat{\mathbf{p}}
 ---
 
 ### 2. Log-Distance Path-Loss Multilateration / Trilateration
-* **Code Reference**: [rssi_trilateration_predictor.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/src/predictors/rssi_trilateration_predictor.py#L92-L157)
+* **Code Reference**: [rssi_trilateration_predictor.py](../src/predictors/rssi_trilateration_predictor.py#L92-L157)
 
 This algorithm converts raw RSSI measurements into estimated 3D Euclidean distances $d_i$ between the UAV and ground sensors using a log-distance propagation model, followed by linear multilateration for initialization and non-linear Gauss-Newton optimization.
 
@@ -118,7 +134,7 @@ Solved using SciPy's `least_squares` with `method='trf'` (Trust Region Reflectiv
 ---
 
 ### 3. Spatial Loss Functions & Evaluation Metrics
-* **Code Reference**: [base_predictor.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/src/predictors/base_predictor.py#L38-L138)
+* **Code Reference**: [base_predictor.py](../src/predictors/base_predictor.py#L38-L138)
 
 Given ground truth coordinates $\mathbf{p}_k^* = (x_k^*, y_k^*, z_k^*)$ and predicted coordinates $\hat{\mathbf{p}}_k = (\hat{x}_k, \hat{y}_k, \hat{z}_k)$ across $M$ evaluation timestamps:
 
@@ -142,7 +158,7 @@ Given ground truth coordinates $\mathbf{p}_k^* = (x_k^*, y_k^*, z_k^*)$ and pred
 ## Deep Explanation of the Default Noising System
 
 ### Why Linear Power Domain?
-* **Code Reference**: [main.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/scripts/main.py#L101-L165)
+* **Code Reference**: [main.py](../archive/scripts/main_20sens.py)
 
 In physical RF systems, environmental thermal noise (AWGN) and multipath propagation fading act additively or multiplicatively on linear power signals ($\text{Watts}$ or $\text{mW}$). Applying Gaussian noise directly to logarithmic power measurements ($\text{dBm}$) produces asymmetrical, non-physical distributions in linear space.
 
@@ -205,62 +221,68 @@ $$P_{tx, \text{dBm, noisy}} = 10 \log_{10}\left( \max(P_{tx, \text{linear, noisy
 In addition to algebraic RSSI algorithms, the codebase provides data-driven machine learning models:
 
 1. **XGBoost Trajectory Post-Processor**:
-   - Source: [train_xgboost.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/scripts/train_xgboost.py) & [online_post_processor.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/src/postprocessing/online_post_processor.py)
+   - Source: [train_xgboost.py](train/train_xgboost.py) & [online_post_processor.py](../src/postprocessing/online_post_processor.py)
    - Extracted Features: Velocity trends ($\text{grad}(x), \text{grad}(y), \text{grad}(z)$), sensor array inter-distance metrics, spatial centroid offsets, and temporal context window features ($\pm 5$ steps).
    - Target: Refines $(x, y, z)$ coordinates to reduce residual spatial error.
 
 2. **Spatiotemporal Hybrid Transformer Encoder**:
-   - Source: [train_hybrid.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/scripts/train_hybrid.py) & [hybrid_encoder.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/src/models/hybrid_encoder.py)
+   - Source: [train_hybrid.py](train/train_hybrid.py) & [hybrid_encoder.py](../src/models/hybrid_encoder.py)
    - Encodes static sensor parameters (gains, coordinates) and dynamic multi-sector RSSI readings into spatial and temporal attention embeddings.
 
 3. **LSTM Sequence Decoder**:
-   - Source: [train_lstm.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/scripts/train_lstm.py) & [lstm_decoder.py](file:///c:/Users/user/Documents/BGU-Master/Transformer-based-UAV-Localization-with-Multi-Sensors/src/models/lstm_decoder.py)
+   - Source: [train_lstm.py](train/train_lstm.py) & [lstm_decoder.py](../src/models/lstm_decoder.py)
    - Autoregressively models temporal trajectory dynamics from encoder hidden state representations.
 
 ---
 
 ## Execution & Command Line Interface
 
-### 1. Run Baseline RSSI Evaluation (Main Entry Point)
-To run WCL and Trilateration baseline evaluation on test dataset `5K_4`:
+All commands are run from the repository root.
+
+### 1. Run the Noise-Grid Evaluation (Main Entry Point)
+Evaluates on test dataset `5K_4` over the background-noise-floor × samples-per-timestamp grid:
 ```bash
 python main.py --max_exps 10
+# equivalent:
+python scripts/evaluate/eval_noise_grid.py --max_exps 10 --noise_floors -90 -100 -110 --samples_per_ts 1 10 100
 ```
 
-### 2. Run Evaluation with Linear Power Noise
-To evaluate algorithm robustness under 5% relative linear power noise ($\sigma = 0.05$):
+### 2. Run the Linear Power Noise Evaluation (legacy)
+The linear-noise options (`--power_noise_std`, `--ptx_noise_std`, `--noise_mode`) described above belong to the archived runner:
 ```bash
-python main.py --power_noise_std 0.05 --noise_mode relative --max_exps 10
+python archive/scripts/main_20sens.py --power_noise_std 0.05 --noise_mode relative --max_exps 10
+python archive/scripts/main_20sens.py --power_noise_std 0.05 --ptx_noise_std 0.02 --max_exps 10
 ```
 
-To evaluate with both receiver power noise ($\sigma_{\text{power}} = 0.05$) and transmit power noise ($\sigma_{P_{tx}} = 0.02$):
-```bash
-python main.py --power_noise_std 0.05 --ptx_noise_std 0.02 --max_exps 10
-```
-
-### 3. Run Automated Noise Sweep Experiment Suite
-Run the batch script to automatically evaluate noise levels from $0.00$ to $0.10$:
+### 3. Run the Sensor-Count Experiment Suite
 ```cmd
-scripts\rssi_exp.bat
+scripts\evaluate\rssi_exp.bat
 ```
 
 ### 4. Plot Noise Analysis Graphs
-To generate evaluation metric plots across noise levels:
 ```bash
-python -m src.utils.plot_results
+python scripts/analysis/plot_results.py --base_dir outputs
 ```
 
 ### 5. Train Machine Learning Models
 ```bash
 # Build dataset binary cache
-python scripts/build_dataset_cache.py
+python scripts/data/build_dataset_cache.py
 
 # Train XGBoost Post-Processor
-python scripts/train_xgboost.py
+python scripts/train/train_xgboost.py
 
 # Train Hybrid Transformer Encoder
-python scripts/train_hybrid.py
+python scripts/train/train_hybrid.py
 
 # Train LSTM Decoder
-python scripts/train_lstm.py
+python scripts/train/train_lstm.py
+```
+
+### 6. Mountains Fine-Tuning
+```bash
+python scripts/finetune/preprocess_mountains.py
+python scripts/finetune/finetune_decoder.py
+python scripts/finetune/resume_finetune.py
+python scripts/finetune/eval_mountains.py
 ```

@@ -8,14 +8,14 @@ Fine-tunes the pre-trained LSTM Decoder on the Mountains dataset (Data/Mountains
               and fine-tuned with a lower learning rate.
   * Data    : non-anomaly Mountains files, 25K_0..25K_9 for training and test_25K_0 for validation,
               preprocessed by preprocess_mountains.py into the same feature layout as normalized_data.csv.
-              Windows / targets are identical to scripts/train_lstm.py: 40-row sliding windows,
+              Windows / targets are identical to scripts/train/train_lstm.py: 40-row sliding windows,
               MSE on the (x, y, z) prediction at the last timestep.
 
-All outputs (cache, checkpoints, logs, plots) are written inside the scripts/fine-tuned-models folder.
+All outputs (cache, checkpoints, logs, plots) are written inside the scripts/finetune folder.
 
 Usage:
-    python scripts/fine-tuned-models/finetune_decoder.py
-    python scripts/fine-tuned-models/finetune_decoder.py --epochs 5 --lr 5e-6 --train_stride 4
+    python scripts/finetune/finetune_decoder.py
+    python scripts/finetune/finetune_decoder.py --epochs 5 --lr 5e-6 --train_stride 4
 """
 
 import sys

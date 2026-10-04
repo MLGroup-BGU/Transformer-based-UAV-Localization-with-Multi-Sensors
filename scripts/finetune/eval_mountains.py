@@ -5,10 +5,10 @@ Evaluation of the Mountains fine-tuned Encoder-Decoder against the original (pre
 and RSSI trilateration on the raw, noise-free Mountains test data (Data/MountainsData/10_sensors_mountains,
 test_25K_0).
 
-Mirrors scripts/main.py without the noise grid: raw test files are loaded, every predictor runs on each
+Mirrors scripts/evaluate/eval_noise_grid.py without the noise grid: raw test files are loaded, every predictor runs on each
 experiment, and side-by-side metrics are saved.
 
-Mountains-specific differences from scripts/main.py:
+Mountains-specific differences from scripts/evaluate/eval_noise_grid.py:
   * Ground truth is the position where the RSSI was measured (end_xyz for Mountains, see
     preprocess_mountains.detect_uav_position_side), matched to each prediction by its actual timestamp.
   * RSSI trilateration needs the drone transmit power (P_tx) from <prefix>_drone_information.csv;
@@ -16,8 +16,8 @@ Mountains-specific differences from scripts/main.py:
   * Note: test_25K_0 is also the validation file used to pick decoder_mountains_finetuned_best.pth.
 
 Usage:
-    python scripts/fine-tuned-models/main.py
-    python scripts/fine-tuned-models/main.py --max_exps 0      # all test experiments
+    python scripts/finetune/eval_mountains.py
+    python scripts/finetune/eval_mountains.py --max_exps 0      # all test experiments
 """
 
 import os
@@ -39,8 +39,8 @@ from src.predictors.encoder_decoder_predictor import EncoderDecoderPredictor
 from src.predictors.rssi_trilateration_predictor import RSSITrilaterationPredictor
 from preprocess_mountains import RAW_DIR, find_raw_prefixes, raw_files, detect_uav_position_side
 
-# scripts/main.py shares this module's name, so it is loaded from its path
-_spec = importlib.util.spec_from_file_location("base_main", os.path.join(ROOT_DIR, "scripts", "main.py"))
+# scripts/evaluate/eval_noise_grid.py shares this module's name, so it is loaded from its path
+_spec = importlib.util.spec_from_file_location("base_main", os.path.join(ROOT_DIR, "scripts", "evaluate", "eval_noise_grid.py"))
 base_main = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(base_main)
 apply_ptx_uncertainty_to_raw_data = base_main.apply_ptx_uncertainty_to_raw_data
@@ -75,7 +75,7 @@ def read_first_experiments(path: str, exp_col: str, exp_ids: Optional[set], chun
 
 
 def load_mountains_test_files(prefix: str, max_exps: Optional[int]) -> Dict[str, pd.DataFrame]:
-    """Loads the raw Mountains test tables (limited to the first max_exps experiments) into scripts/main.py's layout."""
+    """Loads the raw Mountains test tables (limited to the first max_exps experiments) into scripts/evaluate/eval_noise_grid.py's layout."""
     files = raw_files(prefix)
     print(f"[INFO] Loading Mountains test files: {os.path.basename(prefix)}_*.csv")
 
