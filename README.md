@@ -1,59 +1,225 @@
 # Transformer-Based UAV Localization with Multi-Sensors
 
-A deep learning pipeline for 3D UAV localization using a passive ground network of RF sensors. The system fuses multi-sensor RSSI readings through a **Hybrid Spatiotemporal Transformer Encoder** and an **LSTM Decoder** to predict continuous 3D UAV coordinates $(x, y, z)$.
+Locating a drone in 3D from the signal strength (RSSI) it leaves on a network of passive ground RF sensors.
+
+A **Hybrid Spatiotemporal Transformer encoder** learns a representation of the multi-sensor, multi-sector RSSI stream. A light **LSTM decoder** turns that representation into a continuous UAV position $(x, y, z)$. The learned model is benchmarked against classical **path-loss trilateration** under realistic receiver noise and transmit-power uncertainty. It is then adapted to a new terrain (**Mountains**) by fine-tuning only the decoder.
 
 ---
 
-## Architecture
+## Table of Contents
+1. [The Problem](#the-problem)
+2. [Data](#data)
+3. [Model](#model)
+4. [Baselines](#baselines)
+5. [Noise Model](#noise-model)
+6. [Results](#results)
+7. [Repository Layout](#repository-layout)
+8. [Setup](#setup)
+9. [Usage: Full Pipeline](#usage-full-pipeline)
+10. [Outputs and Metrics](#outputs-and-metrics)
+11. [CLI Reference](#cli-reference)
+12. [Further Documentation](#further-documentation)
 
-The core pipeline is an **Encoder → Decoder** design:
+---
+
+## The Problem
+
+A UAV transmitting at 433 MHz flies over a 5 km × 5 km area watched by **10 passive ground sensors**. Each sensor has **6 directional antenna sectors** and, at every time step, reports which sector detected the drone and the received power in dBm. A sensor does not know the drone's transmit power ($P_{tx}$), and its readings are affected by thermal noise.
+
+**Goal:** estimate the drone's 3D position at every time step from these readings alone.
+
+Classical methods turn RSSI into distance through a path-loss model and then solve for position. This works well when $P_{tx}$ is known exactly, but it breaks down quickly when $P_{tx}$ is even slightly wrong. This project tests whether a learned model, which never sees $P_{tx}$, can be more robust.
+
+---
+
+## Data
+
+The data is simulated and organised in folders of experiments (one experiment = one drone trajectory). The data itself is not in git; see [Usage](#usage-full-pipeline) to download it.
+
+| Dataset | Location (under `Data/`) | Use |
+|---|---|---|
+| Training set | `train_data_10_sensors_zsectors_ptx_model_preprocessing/5K_0 … 5K_29` (30 folders) | Encoder / decoder training |
+| Test set | `test_data_10_sensors_zsectors_ptx_model_preprocessing/5K_0 … 5K_4` | Validation; `5K_4` is the main evaluation set |
+| Sensor-count sets | `sensorsAmountData/{3,4,5,8,15,20}_sensors_test_data/` | Evaluation with fewer or more sensors |
+| Mountains | `MountainsData/10_sensors_mountains/` | Terrain-transfer fine-tuning and evaluation |
+| Tensor caches | `cache/{train,test}/subcache_*.pt` | Pre-windowed training tensors (built locally) |
+
+### Raw files (one set per folder)
+| File | Content |
+|---|---|
+| `sensor_detection_summary.csv` | Per sensor and timestamp: detected sector(s), total received power (dBm), drone position |
+| `sensor_information.csv` | Sensor hardware: antenna gain, SINR threshold, sensitivity |
+| `sensor_distances.csv` | Sensor positions and sensor–drone distances |
+| `drone_information.csv` | Drone type, transmit power $P_{tx}$ (10–30 dBm), antenna gain, frequency band |
+| `drone_trajectories.csv` | Ground-truth trajectory (start/end position per step) |
+| `sensor_gain_sectors.csv`, `phi_sector_scheme.csv` | Sector antenna pattern definitions |
+
+### Model input: `normalized_data.csv`
+`scripts/data/data_preprocessing.py` joins the raw tables into a dense table with **one row per (experiment, sensor, time step)**. Every sensor has a row at every time step, and sectors without a detection are 0.
+
+| Columns | Meaning | Scaling |
+|---|---|---|
+| `experiment_id, sensor_id, time_step` | Indexing | — |
+| `sector_1_power … sector_6_power` | RSSI per antenna sector (dBm, 0 = no detection) | raw dBm |
+| `sensor_x, sensor_y, sensor_z` | Sensor position | km (÷1000) |
+| `gain, sinr_threshold, sensitivity` | Sensor hardware | gain raw, SINR ÷10, sensitivity ÷90 |
+| `uav_x, uav_y, uav_z` | Ground-truth UAV position (target) | km |
+
+A model **window is 40 consecutive rows**, i.e. **4 time steps × 10 sensors**. With $N$ sensors, the matching window is $4N$, which is why the sensor-count runs use `--sequence_size 12, 16, 20, 32, 60, 80`.
+
+### Dataset characteristics (test set `5K_4`)
+| Property | Distribution |
+|---|---|
+| 3D sensor–UAV distance | Bell-shaped, peak ~4–5 km, range 0–8 km |
+| UAV altitude (Z) | Roughly uniform, 0–5 km |
+| 2D trajectory coverage | Uniformly dense across the 5 km × 5 km grid |
+| Active sensors per time step | Strongly skewed toward 9–10 |
+| UAV transmit power $P_{tx}$ | Near-uniform 10–30 dBm, mean ≈ 19.9 dBm |
+| RSSI vs. distance | Log-distance path loss, fitted exponent n ≈ 1.83, high variance |
+
+![Dataset Analysis Dashboard](outputs/data_analysis/dataset_analysis_dashboard.png)
+
+*Generated by `scripts/analysis/data_analysis.py`; see `outputs/data_analysis/` for the individual plots.*
+
+---
+
+## Model
+
+Training happens in two stages. The encoder is trained alone first, then frozen while the decoder learns to output positions.
 
 ```
-Multi-Sensor RSSI Input  (10 sensors × T timestamps)
-          │
-          ▼
-┌──────────────────────────────────────────┐
-│   HybridSpatiotemporalPredictor          │
-│                                          │
-│  · SparseDynamicEncoder  ← sector RSSI  │
-│  · StaticContextEncoder  ← gain, SINR   │
-│  · SpatialPosEncoder     ← sensor (xyz) │
-│  · TemporalPosEncoder    ← time index   │
-│          │                               │
-│   Fusion → LayerNorm                     │
-│          │                               │
-│   Autoregressive Transformer Decoder     │
-│   (causal mask, 3 layers)                │
-└──────────────────────────────────────────┘
-          │  encoder hidden states
-          ▼
-┌──────────────────────────────────────────┐
-│   LSTMDecoder                            │
-│   InputProj → LSTM → FC                  │
-│   → (x, y, z) in km                      │
-└──────────────────────────────────────────┘
+ Window: 40 rows (4 time steps × 10 sensors)
+   │
+   ├─ sector_1..6 power ──► SparseDynamicEncoder ─┐
+   ├─ gain, SINR, sens. ──► StaticContextEncoder  ├─► concat ─► Linear fusion ─► LayerNorm ──► fused embedding (d=128)
+   ├─ sensor x, y, z ─────► Spatial pos. encoding │       (Cartesian + spherical basis)              │
+   └─ row index ──────────► Temporal pos. encoding┘                                                   │
+                                                                                                      │
+  Stage 1 (self-supervised pre-training):                                                             │
+     fused embedding ─► causal Transformer (3 layers, 8 heads) ─► predict next row's 6 sector powers ◄┤
+                                                                                                      │
+  Stage 2 (localization):                                                                             │
+     fused embedding ─► LSTM decoder (Linear 128→256, 2-layer LSTM, FC) ─► (x, y, z) in km  ◄─────────┘
 ```
 
-The encoder fuses dynamic RSSI readings per antenna sector (up to 6 sectors per sensor) with static hardware parameters (gain, SINR threshold, sensitivity) and both spatial and temporal positional encodings. The LSTM decoder converts the encoder's hidden states into trajectory waypoints.
+### Stage 1: Hybrid Spatiotemporal encoder (`src/models/hybrid_encoder.py`)
+- **Inputs per row:** sector powers (dynamic), sensor hardware (static), sensor position (spatial), and row position (temporal). Each gets its own embedding, and the four are fused into one 128-d vector.
+- **Objective:** autoregressive next-step prediction. A causal Transformer predicts the next row's sector powers from the rows so far (MSE, first 10 positions skipped as warm-up). No position labels are used, so the encoder learns the structure of the RSSI field itself.
+- **Training:** `scripts/train/train_hybrid.py`. Adam, lr 1e-4, batch 512, mixed precision (AMP). Checkpoints are saved per epoch to `models/encoder/`, and **epoch 16** is the one used downstream.
+
+### Stage 2: LSTM decoder (`src/models/lstm_decoder.py`)
+- **Input:** the encoder's **fused embedding** for each row of the window (`get_hidden_state(..., layer_idx="embedding")`). The encoder is frozen.
+- **Output:** a position for every row. The loss is MSE between the **last row's** prediction and its true `uav_x, uav_y, uav_z`.
+- **Training:** `scripts/train/train_lstm.py`. Adam, lr 1e-4, batch 512, 15 epochs. Checkpoints go to `models/decoder/`, and **epoch 12** (lowest validation loss) is the one used.
+
+### Inference (`src/predictors/encoder_decoder_predictor.py`)
+`EncoderDecoderPredictor` takes the **raw CSV tables** of an experiment and handles everything itself: densification, normalisation, a sliding window with stride 1 (zero-padded at the start), the encoder, and the decoder. It outputs one position per window, i.e. per time step.
+
+### Optional: XGBoost post-processor
+`scripts/train/train_xgboost.py` trains gradient-boosted regressors (`src/postprocessing/online_post_processor.py`). They refine encoder–decoder predictions using velocity trends, sensor-geometry features and ±5-step context. The model is saved to `models/xgboost/` and is **not** part of the default evaluation.
+
+### Terrain transfer: Mountains fine-tuning (`scripts/finetune/`)
+The original model was trained on flat terrain. For the Mountains dataset:
+1. `preprocess_mountains.py` converts the raw Mountains files into the same 18-column layout (stored as compact `.npy` blocks rather than a windowed cache). In Mountains data the RSSI is measured at the step's **end** position (instead of the start position), and the script detects this automatically.
+2. `finetune_decoder.py` keeps the encoder (epoch 16) frozen and **fine-tunes only the decoder**, starting from the epoch-12 weights with a 10× lower learning rate (1e-5). It trains on `25K_0 … 25K_9` and validates on `test_25K_0`.
+3. `resume_finetune.py` continues from the latest fine-tuning checkpoint.
+4. `eval_mountains.py` compares the original and fine-tuned models on the Mountains test file.
+
+---
+
+## Baselines
+
+All predictors share the `BaseUAVPredictor` interface (`src/predictors/base_predictor.py`). Each receives the same raw tables per experiment and is scored by the same `evaluate()` function.
+
+| Predictor | Method | Needs $P_{tx}$? |
+|---|---|---|
+| **Encoder-Decoder** (this work) | Learned model above | **No** |
+| **RSSI Trilateration** | Log-distance path loss turns RSSI into range per sensor. A linear least-squares fit gives an initial guess (with an airborne-Z heuristic), refined by bounded non-linear least squares (SciPy TRF) inside $[0, 5000]^3$ m. | **Yes**, read from `drone_information.csv` |
+| RSSI WCL | Weighted centroid of sensor positions, weighted by linear received power | No (available, not in the default run) |
+
+Trilateration is run twice: with the **true** $P_{tx}$ (an optimistic upper bound) and with $P_{tx}$ off by **1 dB**, the realistic case where the transmitter's power is unknown or estimated.
+
+The full derivations of the WCL and trilateration algorithms are in [`scripts/README.md`](scripts/README.md).
+
+---
+
+## Noise Model
+
+`scripts/evaluate/eval_noise_grid.py` simulates a receiver with a background noise floor. It applies additive white Gaussian noise (AWGN) in the **voltage domain** and averages several samples per time step:
+
+1. Convert each active reading to linear power and amplitude: $P = 10^{P_{dBm}/10}$, $v = \sqrt{P}$.
+2. Noise std from the noise floor $N_0$ (dBm): $\sigma = 10^{N_0/20}$.
+3. For $K$ samples per timestamp: $\hat P = \frac{1}{K}\sum_{k=1}^{K} (v + n_k)^2,\ n_k \sim \mathcal N(0, \sigma^2)$.
+4. Clamp at $10^{-15}$ mW and convert back to dBm.
+
+Only active detections (non-zero and above −120 dBm) are noised. The grid covers **noise floor ∈ {−90, −100, −110} dBm** × **samples per timestamp ∈ {1, 10, 100}**. More samples average out the noise, so −90 dBm with 1 sample is the hardest setting and −110 dBm with 100 samples the easiest.
+
+$P_{tx}$ uncertainty is modelled separately as a fixed dB offset added to the drone's transmit power given to trilateration.
+
+---
+
+## Results
+
+### Main evaluation: test set `5K_4`, 10 sensors
+3D mean error in metres; lower is better. Figures are from `outputs/5K_4_full_grid_summary.csv`, an earlier run that also included 3 dB and 6 dB $P_{tx}$ error. The current script runs 0 dB and 1 dB.
+
+| Noise floor | Samples / ts | **Encoder-Decoder** | Trilat. (true $P_{tx}$) | Trilat. (1 dB error) | Trilat. (3 dB error) |
+|---|---|---|---|---|---|
+| −90 dBm | 1 | 1879 | 1583 | 1839 | 2606 |
+| −90 dBm | 10 | 736 | 562 | 741 | 1730 |
+| −90 dBm | 100 | **496** | 418 | 566 | 1590 |
+| −100 dBm | 1 | **769** | 559 | 905 | 1979 |
+| −100 dBm | 10 | **283** | 189 | 613 | 1776 |
+| −100 dBm | 100 | **127** | 82 | 559 | 1757 |
+| −110 dBm | 1 | **279** | 190 | 650 | 1807 |
+| −110 dBm | 10 | **109** | 65 | 602 | 1780 |
+| −110 dBm | 100 | **53** | 26 | 595 | 1775 |
+
+**Takeaways**
+- **Trilateration with the exact $P_{tx}$ is the most accurate.** That requires knowing the drone's transmit power exactly, which a passive sensor network does not.
+- **With only 1 dB $P_{tx}$ error, trilateration stalls at ~550–650 m** however clean the signal is. The error comes from the wrong range model, not from noise.
+- **The Encoder-Decoder needs no $P_{tx}$ at all.** It keeps improving as noise falls, down to **53 m**, and beats realistic (1 dB) trilateration in every setting except the noisiest (−90 dBm with 1 sample, and roughly a tie with 10 samples).
+- **It is also ~5× faster:** ~0.6 ms per time step versus ~2.8 ms for trilateration.
+
+### Terrain transfer: Mountains, no noise
+From `scripts/finetune/outputs/evaluation/mountains_summary_no_noise.csv`.
+
+| Model | 3D mean (m) | 3D median (m) | 2D mean (m) | Z mean (m) |
+|---|---|---|---|---|
+| Encoder-Decoder (original) | 280 | 102 | 214 | 131 |
+| **Encoder-Decoder (fine-tuned decoder)** | **65** | **43** | **31** | **51** |
+
+Fine-tuning only the decoder cuts the error by **~4×**. Note that `test_25K_0` is also the validation file used to choose the best fine-tuning checkpoint.
+
+### Sensor-count study
+`scripts/evaluate/rssi_exp.bat` repeats the grid evaluation with 3, 4, 5, 8, 15 and 20 sensors. Results are in `outputs/rssi_exp_{N}sensors/`, with a combined table in `outputs/all_sensors_full_grid_summary.csv`.
 
 ---
 
 ## Repository Layout
 
 ```
-main.py              Root entry point -> scripts/evaluate/eval_noise_grid.py
-src/                 Library code: models/, predictors/, postprocessing/
-scripts/
-  data/              download, preprocess, build tensor cache
-  train/             train_hybrid.py, train_lstm.py, train_xgboost.py
-  evaluate/          eval_noise_grid.py, rssi_exp.bat
-  finetune/          Mountains decoder fine-tuning + evaluation
-  analysis/          data_analysis.py, plot_results.py, experiment viewers
-models/              encoder/, decoder/, xgboost/ checkpoints
-outputs/             All evaluation results and plots
-Data/                Datasets and caches (local, not in git)
-archive/             Legacy scripts and superseded outputs (see archive/README.md)
+main.py                      Root entry point → scripts/evaluate/eval_noise_grid.py
+requirements.txt
+src/                         Library code (imported, never run directly)
+  models/                    hybrid_encoder.py, lstm_decoder.py, positional_encoding.py
+  predictors/                base_predictor.py, encoder_decoder_predictor.py,
+                             rssi_trilateration_predictor.py, rssi_wcl_predictor.py, rssi_utils.py
+  postprocessing/            online_post_processor.py (XGBoost refinement)
+scripts/                     Runnable entry points
+  data/                      download_drive_data.py, data_preprocessing.py, build_dataset_cache.py
+  train/                     train_hybrid.py, train_lstm.py, train_xgboost.py
+  evaluate/                  eval_noise_grid.py, rssi_exp.bat
+  finetune/                  preprocess_mountains.py, finetune_decoder.py, resume_finetune.py, eval_mountains.py
+                             (+ cache/, checkpoints/, outputs/ — local only)
+  analysis/                  data_analysis.py, plot_results.py, visualize_experiment.py, visualize_experiment_html.py
+models/                      Trained weights: encoder/, decoder/, xgboost/ (+ training logs)
+outputs/                     Evaluation CSVs and plots
+Data/                        Datasets and tensor caches (local only, ~600 GB)
+archive/                     Legacy scripts and superseded results — see archive/README.md
 ```
+
+Weights, datasets, caches and result CSVs are **not** stored in git (see `.gitignore`).
 
 ---
 
@@ -63,150 +229,112 @@ archive/             Legacy scripts and superseded outputs (see archive/README.m
 pip install -r requirements.txt
 ```
 
-**Core dependencies**: Python 3.8+, PyTorch (CUDA recommended), Pandas, NumPy, Scikit-Learn, XGBoost, Matplotlib.
+Python 3.8+, PyTorch (a CUDA GPU is strongly recommended for training), NumPy, Pandas, SciPy, scikit-learn, XGBoost, Matplotlib, tqdm, gdown.
+
+All commands below are run from the **repository root**. Every script finds its paths from its own location, so the folder you launch from does not matter for paths.
 
 ---
 
-## Training
+## Usage: Full Pipeline
 
-### 1. Download Raw Data
+### 1. Get the data
 ```bash
-python scripts/data/download_drive_data.py
+python scripts/data/download_drive_data.py          # downloads the training set from Google Drive
+python scripts/data/data_preprocessing.py           # builds normalized_data.csv in each training folder
+python scripts/data/build_dataset_cache.py          # builds Data/cache/{train,test}/subcache_*.pt (40-row windows)
 ```
-Places raw sensor CSVs in `data/train_data_10_sensors_zsectors_ptx_model_preprocessing/` and `data/test_data_10_sensors_zsectors_ptx_model_preprocessing/`.
+The cache is large (~12.7 GB per folder). The training scripts also build any missing cache files automatically.
 
-### 2. Preprocess & Normalize
+### 2. Train
 ```bash
-python scripts/data/data_preprocessing.py
+python scripts/train/train_hybrid.py     # Stage 1: encoder  → models/encoder/hybrid_predictor_10sensors_{N}_epochs.pth
+python scripts/train/train_lstm.py       # Stage 2: decoder  → models/decoder/decoder_10sensors_{N}_epochs.pth
+python scripts/train/train_xgboost.py    # optional post-processor → models/xgboost/post_processing_models.joblib
 ```
-Merges sensor positions, hardware parameters, and sector detections into a dense `10 sensors × T timestamps` grid. Spatial coordinates are scaled to km (÷1000), SINR threshold (÷10), sensitivity (÷90).
+Training logs are appended to `models/{encoder,decoder}/train_*_log.txt`, and loss curves are saved to `outputs/*_train_val_loss.png`.
 
-### 3. Build Tensor Cache
+> `train_hybrid.py` currently **resumes** from the epoch-17 checkpoint (`start_epoch=17`). Edit `main()` to train from scratch.
+
+### 3. Evaluate
 ```bash
-python scripts/data/build_dataset_cache.py
-```
-Converts preprocessed CSVs into memory-mapped PyTorch tensor blocks at `data/cache/{train,test}/subcache_*.pt`.
+python main.py --max_exps 10                         # quick check on 10 experiments
+python main.py                                       # full grid, 100 experiments (default)
+python main.py --noise_floors -100 --samples_per_ts 10 --output_dir outputs/my_run
 
-### 4. Train the Model
-```bash
-python scripts/train/train_hybrid.py
-```
-
-| Hyperparameter | Value |
-|---|---|
-| Sequence Window (`seq_len`) | 40 timestamps |
-| Batch Size | 512 |
-| Embedding Dim (`d_model`) | 128 |
-| Transformer Heads | 8 |
-| Encoder Layers | 3 |
-| Optimizer | Adam, lr=1e-4, AMP |
-
-Checkpoints are saved per epoch to `models/encoder/`. The predictor automatically loads the latest available `.pth` file.
-
-### 5. Train the LSTM Decoder
-```bash
-python scripts/train/train_lstm.py
+scripts\evaluate\rssi_exp.bat                        # sensor-count study (Windows)
 ```
 
-Requires the encoder checkpoint from step 4 at its best val loss (We used the 16 epochs checkpoint). The encoder weights are frozen during this phase — only the LSTM decoder is trained from scratch using the encoder's hidden state representations as input.
-
-| Hyperparameter | Value |
-|---|---|
-| Sequence Window (`seq_len`) | 40 timestamps |
-| Batch Size | 512 |
-| LSTM Hidden Size | 256 (2× d_model) |
-| LSTM Layers | 2 |
-| Epochs | 15 |
-| Optimizer | Adam, lr=1e-4 |
-
-Decoder checkpoints are saved per epoch to `models/decoder/`. Training and validation loss curves are written to `outputs/lstm_train_val_loss.png`.
-
----
-
-## Evaluation
-
-### Run a quick evaluation
+### 4. Fine-tune on Mountains
 ```bash
-# Evaluate all test experiments
-python main.py
-
-# Evaluate a subset
-python main.py --max_exps 10 --output_dir outputs/
+python scripts/finetune/preprocess_mountains.py      # raw Mountains CSVs → scripts/finetune/cache/*.npy
+python scripts/finetune/finetune_decoder.py          # → scripts/finetune/checkpoints/
+python scripts/finetune/resume_finetune.py --epochs 5   # continue from the latest checkpoint
+python scripts/finetune/eval_mountains.py            # original vs fine-tuned comparison
 ```
 
-### Noise robustness experiment
-`main.py` (→ `scripts/evaluate/eval_noise_grid.py`) evaluates over a grid of background noise floors (dBm) and samples per timestamp:
-
+### 5. Analyse and visualise
 ```bash
-python main.py --noise_floors -90 -100 -110 --samples_per_ts 1 10 100 --max_exps 100
-
-# Sensor-count sweep (3/4/5/8/15/20 sensors) -> outputs/rssi_exp_{N}sensors/
-scripts\evaluate\rssi_exp.bat
-```
-
-The older linear-power-domain noise runner is kept in `archive/scripts/main_20sens.py` (see `archive/README.md`).
-
-### Plot results
-```bash
+python scripts/analysis/data_analysis.py             # dataset statistics → outputs/data_analysis/
 python scripts/analysis/plot_results.py --base_dir outputs
+python scripts/analysis/visualize_experiment.py --exp_id 1            # interactive trajectory viewer
+python scripts/analysis/visualize_experiment_html.py --exp_id 1 --html  # export as interactive HTML
 ```
 
-Generates plots under `outputs/plots/`: error vs. noise curves, CDF plots, trajectory comparisons, latency charts.
-
 ---
 
-## Experimental Setting
+## Outputs and Metrics
 
-To benchmark the encoder-decoder pipeline, it is compared side-by-side against two classical RSSI-based localization methods on the same test set (`5K_4`, ~5000 trajectory steps):
+Each grid cell writes two CSVs to the output folder, and one combined table is written at the end:
 
-| Predictor | Method |
+| File | Content |
 |---|---|
-| **Encoder-Decoder** | Hybrid Transformer Encoder + LSTM Decoder (this work) |
-| **RSSI WCL** | Weighted Centroid Localization — weights sensor positions by linear received power |
-| **RSSI Trilateration** | Path-loss multilateration — estimates range from RSSI via log-distance model, solves 3D position |
+| `5K_4_summary_background_noise_{dBm}_samples_{K}.csv` | One row per predictor with all metrics |
+| `5K_4_predictions_background_noise_{dBm}_samples_{K}.csv` | Per-time-step predicted vs. true position, per predictor |
+| `5K_4_full_grid_summary.csv` | All summaries stacked, with noise floor and sample count columns |
 
-Each predictor is evaluated on 3D Mean Error, RMSE, Median Error, P95 Error, 2D/Z errors, and inference latency. The noise sweep (1%–10% Gaussian linear noise on received power) tests robustness under measurement uncertainty — the encoder-decoder's learned feature space degrades far more gracefully than the math-based methods that depend directly on raw RSSI values.
-
-All three predictors share the same `BaseUAVPredictor` interface and receive identical raw CSV inputs per experiment, ensuring a fair comparison.
-
----
-
-## Dataset Overview
-
-The dataset (`5K_4`) covers realistic UAV trajectories over a 5 km × 5 km area monitored by 10 ground RF sensors.
-
-| Property | Distribution |
-|---|---|
-| **3D sensor-UAV distance** | Bell-shaped, peak ~4–5 km, range 0–8 km |
-| **UAV altitude (Z)** | Roughly uniform, 0–5 km |
-| **2D trajectory coverage** | Uniformly dense across the full 5 km × 5 km grid |
-| **Active sensors / timestamp** | Strongly skewed toward 9–10 simultaneous active sensors |
-| **UAV transmit power (P_tx)** | Near-uniform, 10–30 dBm, mean ≈ 19.9 dBm |
-| **RSSI vs. distance** | Follows log-distance path-loss (fitted exponent n ≈ 1.83) with high variance |
-
-![Dataset Analysis Dashboard](outputs/data_analysis/dataset_analysis_dashboard.png)
+**Metrics** (`BaseUAVPredictor.evaluate`):
+- **3D Euclidean error:** mean, median, std, RMSE, P90, P95, min, max
+- **2D (horizontal) error:** mean, median, std, P90, P95
+- **Z (altitude) error:** mean, median, P95
+- **Trajectory step loss:** error of the step-to-step displacement vector, which measures trajectory smoothness
+- **MSE in km²:** per axis and overall, comparable to the training loss
+- **Speed:** total processing time, latency per time step (ms), throughput (steps/s)
 
 ---
 
 ## CLI Reference
 
 ### `main.py` / `scripts/evaluate/eval_noise_grid.py`
-
 | Flag | Default | Description |
 |---|---|---|
-| `--data_dir` | auto (`Data/test_data_.../5K_4`) | Raw dataset folder |
-| `--num_sensors` | 10 | Number of sensors |
-| `--sequence_size` | 40 | Window size for the Encoder-Decoder |
-| `--max_exps` | 100 | Max experiments to evaluate |
-| `--noise_floors` | -90 -100 -110 | Background noise floors (dBm) |
-| `--samples_per_ts` | 1 10 100 | Samples per timestamp |
-| `--output_dir` | `outputs/` | Output folder for result CSVs |
+| `--data_dir` | auto-detected `Data/test_data_.../5K_4` | Folder with the raw test CSVs |
+| `--num_sensors` | 10 | Number of sensors in the dataset |
+| `--sequence_size` | 40 | Encoder–decoder window in rows (use 4 × `num_sensors`) |
+| `--max_exps` | 100 | Number of experiments to evaluate |
+| `--noise_floors` | −90 −100 −110 | Background noise floors (dBm) |
+| `--samples_per_ts` | 1 10 100 | Noise samples averaged per time step |
+| `--output_dir` | `outputs/` | Where result CSVs are written |
+
+### `scripts/finetune/finetune_decoder.py` (main options)
+| Flag | Default | Description |
+|---|---|---|
+| `--epochs` | 10 | Fine-tuning epochs |
+| `--lr` | 1e-5 | Learning rate (original decoder training used 1e-4) |
+| `--train_stride` | 1 | Step between training windows (larger = faster epochs) |
+| `--batch_size` | 512 | Batch size |
+| `--grad_clip` | 1.0 | Max gradient norm (≤ 0 disables) |
+
+Run any script with `--help` for the full list of options.
 
 ### `scripts/analysis/plot_results.py`
-
 | Flag | Default | Description |
 |---|---|---|
-| `--base_dir` | `outputs/` | Root folder with `results_rssi_*` subdirectories |
-| `--output_dir` | `outputs/plots/` | Destination for generated PNG figures |
-| `--show` | False | Display plots interactively |
+| `--base_dir` | the script's own folder (pass `outputs` explicitly) | Folder containing the result CSVs |
+| `--output_dir` | `<base_dir>/outputs/plots/` | Where PNG figures are written |
+| `--show` | off | Show the plots interactively |
 
+---
+
+## Further Documentation
+- [`scripts/README.md`](scripts/README.md): full mathematical derivations of WCL, trilateration and the evaluation metrics.
+- [`archive/README.md`](archive/README.md): legacy scripts, including the earlier linear-power-domain noise runner, and superseded results.
