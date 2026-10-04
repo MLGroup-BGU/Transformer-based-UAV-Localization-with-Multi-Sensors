@@ -43,3 +43,12 @@ desktop.ini
 .venv/
 env/
 venv/
+
+# Fine-tuning artifacts (large; kept local only)
+scripts/finetune/cache/
+scripts/finetune/checkpoints/
+scripts/finetune/outputs/
+scripts/fine-tuned-models/cache/
+scripts/fine-tuned-models/checkpoints/
+scripts/fine-tuned-models/outputs/
+*.npy

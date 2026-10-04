@@ -193,6 +193,8 @@ def evaluate_predictors_on_test_data(
     background_noise_dbm: float = -110,
     samples_per_timestamp: int = 1,
     seed: int = 42,
+    num_sensors: int = 10,
+    sequence_size: int = 40,
 ) -> pd.DataFrame:
     if output_dir is None:
         output_dir = os.path.join(ROOT_DIR, "outputs")
@@ -221,12 +223,12 @@ def evaluate_predictors_on_test_data(
     predictor_configs = []
 
     try:
-        enc_dec_predictor = EncoderDecoderPredictor()
+        enc_dec_predictor = EncoderDecoderPredictor(num_sensors=num_sensors, window_size=sequence_size)
         predictor_configs.append(("Encoder-Decoder", enc_dec_predictor, 0.0))
     except FileNotFoundError as e:
         print(f"[WARNING] EncoderDecoderPredictor disabled:\n{e}\n")
 
-    rssi_uncertainties = [0.0, 1.0, 3.0, 6.0]
+    rssi_uncertainties = [0.0, 1.0]
     for unc in rssi_uncertainties:
         label = "RSSI Trilateration (Correct P_tx)" if unc == 0.0 else f"RSSI Trilateration ({int(unc)}dBm Uncertainty)"
         rssi_pred = RSSITrilaterationPredictor(name=label)
@@ -312,14 +314,24 @@ def evaluate_predictors_on_test_data(
 
 
 if __name__ == "__main__":
-    MAX_EXPS = 100  # Set to an integer (e.g., 100) or None to evaluate all experiments
-    noise_floors_dbm = [-90.0, -100.0, -110.0]
-    samples_per_ts_list = [1, 10, 100]
+    parser = argparse.ArgumentParser(description="Evaluate UAV Localization Predictors.")
+    parser.add_argument("--data_dir", type=str, default=None, help="Path to raw dataset folder")
+    parser.add_argument("--num_sensors", type=int, default=10, help="Number of sensors")
+    parser.add_argument("--sequence_size", type=int, default=40, help="Sequence size (window size) for Encoder-Decoder")
+    parser.add_argument("--max_exps", type=int, default=100, help="Maximum number of experiments to evaluate (or None for all)")
+    parser.add_argument("--output_dir", type=str, default=None, help="Directory to save evaluation outputs")
+    parser.add_argument("--noise_floors", type=float, nargs="+", default=[-90.0, -100.0, -110.0], help="List of background noise floors in dBm")
+    parser.add_argument("--samples_per_ts", type=int, nargs="+", default=[1, 10, 100], help="List of samples per timestamp")
+    args = parser.parse_args()
 
-    data_5k4_dir = resolve_5k4_data_dir()
-    raw_dataset = load_raw_dataset_files(data_5k4_dir)
+    MAX_EXPS = args.max_exps
+    noise_floors_dbm = args.noise_floors
+    samples_per_ts_list = args.samples_per_ts
 
-    output_dir = os.path.join(ROOT_DIR, "outputs")
+    data_dir = args.data_dir if args.data_dir else resolve_5k4_data_dir()
+    raw_dataset = load_raw_dataset_files(data_dir)
+
+    output_dir = args.output_dir if args.output_dir else os.path.join(ROOT_DIR, "outputs")
     os.makedirs(output_dir, exist_ok=True)
 
     all_grid_summaries = []
@@ -336,6 +348,8 @@ if __name__ == "__main__":
                 output_dir=output_dir,
                 background_noise_dbm=noise_dbm,
                 samples_per_timestamp=samples_ts,
+                num_sensors=args.num_sensors,
+                sequence_size=args.sequence_size,
             )
 
             summary_df["Background_Noise_dBm"] = noise_dbm
