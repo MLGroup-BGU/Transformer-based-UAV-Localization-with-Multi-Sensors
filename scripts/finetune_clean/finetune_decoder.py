@@ -1,21 +1,22 @@
 """
 finetune_decoder.py
 
-Fine-tunes the pre-trained LSTM Decoder on the Mountains dataset (Data/MountainsData).
+Fine-tunes the pre-trained LSTM Decoder on the clean 10-sensor dataset.
 
   * Encoder : HybridSpatiotemporalPredictor, best epoch (16) checkpoint - frozen, eval mode.
   * Decoder : LSTMDecoder initialised from the best original decoder checkpoint (epoch 12, lowest val loss)
               and fine-tuned with a lower learning rate.
-  * Data    : non-anomaly Mountains files, 25K_0..25K_9 for training and test_25K_0 for validation,
-              preprocessed by preprocess_mountains.py into the same feature layout as normalized_data.csv.
+  * Data    : Data/train_data_10_sensors_zsectors_ptx_model_preprocessing/5K_0..5K_29 for training and
+              Data/test_data_10_sensors_zsectors_ptx_model_preprocessing/5K_0..5K_4 for validation,
+              loaded from each folder's normalized_data.csv by preprocess_clean.py.
               Windows / targets are identical to scripts/train/train_lstm.py: 40-row sliding windows,
               MSE on the (x, y, z) prediction at the last timestep.
 
-All outputs (cache, checkpoints, logs, plots) are written inside the scripts/finetune folder.
+All outputs (cache, checkpoints, logs, plots) are written inside the scripts/finetune_clean folder.
 
 Usage:
-    python scripts/finetune/finetune_decoder.py
-    python scripts/finetune/finetune_decoder.py --epochs 5 --lr 5e-6 --train_stride 4
+    python scripts/finetune_clean/finetune_decoder.py
+    python scripts/finetune_clean/finetune_decoder.py --epochs 5 --lr 5e-6 --train_stride 4
 """
 
 import sys
@@ -43,13 +44,14 @@ for p in (ROOT_DIR, SCRIPT_DIR):
 
 from src.models.hybrid_encoder import HybridSpatiotemporalPredictor
 from src.models.lstm_decoder import LSTMDecoder
-from preprocess_mountains import preprocess_all, RAW_DIR, CACHE_DIR
+from preprocess_clean import preprocess_all, TRAIN_DIR, TEST_DIR, CACHE_DIR
 
 DEFAULT_ENCODER_CKPT = os.path.join(ROOT_DIR, "models", "encoder", "hybrid_predictor_10sensors_16_epochs.pth")
 DEFAULT_DECODER_CKPT = os.path.join(ROOT_DIR, "models", "decoder", "decoder_10sensors_12_epochs.pth")
 CHECKPOINT_DIR = os.path.join(SCRIPT_DIR, "checkpoints")
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "outputs")
 HISTORY_PATH = os.path.join(OUTPUT_DIR, "finetune_history.csv")
+CKPT_PREFIX = "decoder_clean_finetuned"
 
 
 class Tee:
@@ -157,7 +159,7 @@ def plot_losses(history, output_path):
     plt.plot(hist['epoch'], hist['val_loss'], label="Validation Loss")  # epoch 0 = before fine-tuning
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
-    plt.title("LSTM Decoder Fine-Tuning (Mountains) - Train & Validation Loss")
+    plt.title("LSTM Decoder Fine-Tuning (Clean) - Train & Validation Loss")
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
@@ -182,7 +184,7 @@ def finetune_decoder(encoder, decoder, train_files, val_files, device, optimizer
     last_epoch = start_epoch + args.epochs
 
     if history is None:
-        # Baseline: original decoder on Mountains validation data before any fine-tuning
+        # Baseline: original decoder on the validation data before any fine-tuning
         val_loss, val_err = evaluate(encoder, decoder, val_files, device, args, desc="Epoch 0 [Val - baseline]")
         history = [{'epoch': 0, 'train_loss': np.nan, 'val_loss': val_loss, 'val_mean_3d_error_m': val_err}]
         print(f"Epoch [0/{last_epoch}] (pre-trained decoder), Val Loss: {val_loss:.6f}, Val Mean 3D Error: {val_err:.1f} m")
@@ -236,13 +238,13 @@ def finetune_decoder(encoder, decoder, train_files, val_files, device, optimizer
             'encoder_ckpt': args.encoder_ckpt,
             'base_decoder_ckpt': args.decoder_ckpt,
         }
-        save_path = os.path.join(CHECKPOINT_DIR, f"decoder_mountains_finetuned_{epoch}_epochs.pth")
+        save_path = os.path.join(CHECKPOINT_DIR, f"{CKPT_PREFIX}_{epoch}_epochs.pth")
         torch.save(ckpt, save_path)
         print(f"Saved model checkpoint: {save_path}")
 
         if val_loss < best_val:
             best_val = val_loss
-            best_path = os.path.join(CHECKPOINT_DIR, "decoder_mountains_finetuned_best.pth")
+            best_path = os.path.join(CHECKPOINT_DIR, f"{CKPT_PREFIX}_best.pth")
             torch.save(ckpt, best_path)
             print(f"[*] New best val loss {val_loss:.6f} -> {best_path}")
 
@@ -254,9 +256,9 @@ def finetune_decoder(encoder, decoder, train_files, val_files, device, optimizer
 
 
 def latest_finetuned_checkpoint(checkpoint_dir=CHECKPOINT_DIR):
-    """Returns (path, epoch) of the highest-epoch decoder_mountains_finetuned_{N}_epochs.pth, or (None, 0)."""
+    """Returns (path, epoch) of the highest-epoch decoder_clean_finetuned_{N}_epochs.pth, or (None, 0)."""
     latest, latest_epoch = None, 0
-    for path in glob.glob(os.path.join(checkpoint_dir, "decoder_mountains_finetuned_*_epochs.pth")):
+    for path in glob.glob(os.path.join(checkpoint_dir, f"{CKPT_PREFIX}_*_epochs.pth")):
         m = re.search(r"_(\d+)_epochs\.pth$", path)
         if m and int(m.group(1)) > latest_epoch:
             latest, latest_epoch = path, int(m.group(1))
@@ -275,8 +277,9 @@ def load_history(upto_epoch, ckpt):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Fine-tune the LSTM decoder on the Mountains dataset.")
-    parser.add_argument("--raw_dir", default=RAW_DIR)
+    parser = argparse.ArgumentParser(description="Fine-tune the LSTM decoder on the clean dataset.")
+    parser.add_argument("--train_dir", default=TRAIN_DIR)
+    parser.add_argument("--test_dir", default=TEST_DIR)
     parser.add_argument("--cache_dir", default=CACHE_DIR)
     parser.add_argument("--encoder_ckpt", default=DEFAULT_ENCODER_CKPT)
     parser.add_argument("--decoder_ckpt", default=DEFAULT_DECODER_CKPT,
@@ -313,7 +316,7 @@ def main(resume=False):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     print("\n==================================================")
-    print("  LSTM Decoder Fine-Tuning - Mountains Data        ")
+    print("  LSTM Decoder Fine-Tuning - Clean Data            ")
     print("==================================================")
     print(f"[*] PyTorch Version : {torch.__version__}")
     if torch.cuda.is_available():
@@ -325,11 +328,11 @@ def main(resume=False):
     print(f"[*] Arguments       : {vars(args)}")
     print("==================================================\n")
 
-    caches = preprocess_all(args.raw_dir, args.cache_dir)
+    caches = preprocess_all(args.train_dir, args.test_dir, args.cache_dir)
     train_files, val_files = caches["train"], caches["val"]
     print(f"[*] Train files: {len(train_files)}, Val files: {len(val_files)}")
     if not train_files or not val_files:
-        raise RuntimeError("Need at least one train and one validation Mountains file.")
+        raise RuntimeError("Need at least one train and one validation file.")
 
     # Pre-trained Encoder (frozen)
     encoder = HybridSpatiotemporalPredictor(

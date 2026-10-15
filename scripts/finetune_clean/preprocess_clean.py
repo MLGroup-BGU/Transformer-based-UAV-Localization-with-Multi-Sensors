@@ -1,17 +1,17 @@
 """
-preprocess_mountains.py
+preprocess_clean.py
 
-Converts the raw Mountains simulator output (Data/MountainsData/10_sensors_mountains/*.csv)
-into the exact per-row feature layout of the `normalized_data.csv` files the encoder/decoder
-were trained on:
+Loads the clean (no mountains) 10-sensor data into the exact per-row feature layout of the `normalized_data.csv` files the
+encoder/decoder were trained on. Every experiment folder already ships a `normalized_data.csv` in that layout, which is
+used as-is; if a folder has none, the rows are rebuilt from the raw simulator tables:
 
     experiment_id, sensor_id, time_step,
     sector_1_power .. sector_6_power,          # dBm in the detected sector, 0.0 elsewhere / no detection
     sensor_x, sensor_y, sensor_z,              # km
     gain, sinr_threshold, sensitivity,         # gain raw, sinr / 10, sensitivity / 90
     uav_x, uav_y, uav_z                        # UAV position where the RSSI was measured, km
-                                               # (start_xyz in the original data, end_xyz in Mountains -
-                                               #  detected automatically from the detections' drone_positions)
+                                               # (start_xyz or end_xyz - detected automatically from
+                                               #  the detections' drone_positions)
 
 Instead of a CSV + stacked sliding-window cache (~40 GB per 25K-experiment file), every raw file
 is stored as a compact block of rows plus per-experiment offsets:
@@ -22,7 +22,14 @@ is stored as a compact block of rows plus per-experiment offsets:
 Sliding windows (seq_len rows, step 1) are cut on the fly by finetune_decoder.py, exactly like
 scripts/data/build_dataset_cache.py does (rows of an experiment sorted by time_step, window = rows[i:i+seq_len]).
 
-Anomaly files are ignored. Files whose name contains "test" go to the validation cache.
+Data layout (one folder per 5K-experiment file):
+
+    Data/train_data_10_sensors_zsectors_ptx_model_preprocessing/5K_0 .. 5K_29/
+    Data/test_data_10_sensors_zsectors_ptx_model_preprocessing/5K_0 .. 5K_4/
+        normalized_data.csv, drone_information.csv, drone_trajectories.csv, sensor_detection_summary.csv,
+        sensor_distances.csv, sensor_information.csv, ...
+
+Anomaly folders are ignored. Folders under the test directory go to the validation cache.
 """
 
 import os
@@ -36,8 +43,12 @@ import pandas as pd
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, "..", ".."))
 
-RAW_DIR = os.path.join(ROOT_DIR, "Data", "MountainsData", "10_sensors_mountains")
-CACHE_DIR = os.path.join(SCRIPT_DIR, "cache")
+TRAIN_DIR = os.path.join(ROOT_DIR, "Data", "train_data_10_sensors_zsectors_ptx_model_preprocessing")
+TEST_DIR = os.path.join(ROOT_DIR, "Data", "test_data_10_sensors_zsectors_ptx_model_preprocessing")
+# Separate from the old Mountains "cache" folder: the file tags (5K_0, ...) are the same, so a shared
+# folder would silently reuse the Mountains blocks.
+CACHE_DIR = os.path.join(SCRIPT_DIR, "cache_clean")
+NORMALIZED_CSV = "normalized_data.csv"
 
 NUM_SECTORS = 6
 COLUMNS = (["experiment_id", "sensor_id", "time_step"]
@@ -46,26 +57,43 @@ COLUMNS = (["experiment_id", "sensor_id", "time_step"]
               "uav_x", "uav_y", "uav_z"])
 
 
-def find_raw_prefixes(raw_dir=RAW_DIR):
-    """Returns {tag: (prefix_path, split)} for all non-anomaly raw experiment files."""
+RAW_TABLES = {
+    "drone_trajectories": "drone_trajectories.csv",
+    "sensor_distances": "sensor_distances.csv",
+    "sensor_information": "sensor_information.csv",
+    "detections": "sensor_detection_summary.csv",
+    "drone_information": "drone_information.csv",
+}
+
+
+def _natural_key(path):
+    return [int(t) if t.isdigit() else t for t in re.split(r"(\d+)", os.path.basename(path))]
+
+
+def find_raw_prefixes(train_dir=TRAIN_DIR, test_dir=TEST_DIR):
+    """
+    Returns {tag: (folder_path, split)} for all non-anomaly experiment folders.
+    e.g. train_dir/5K_3 -> ("5K_3", "train"),  test_dir/5K_0 -> ("test_5K_0", "val")
+    """
     prefixes = {}
-    for det_path in sorted(glob.glob(os.path.join(raw_dir, "*_detections.csv"))):
-        name = os.path.basename(det_path)[: -len("_detections.csv")]
-        if name.startswith("anomalies"):
+    for split_dir, split in ((train_dir, "train"), (test_dir, "val")):
+        if not split_dir:
             continue
-        # e.g. no_anomalies_10sensors_1drone_withmountains_25K_3exps -> 25K_3
-        #      no_anomalies_10sensors_1drone_withmountains_test_25K_0_exps -> test_25K_0
-        m = re.search(r"withmountains_(test_)?(\d+K)_(\d+)_?exps$", name)
-        tag = f"{m.group(1) or ''}{m.group(2)}_{m.group(3)}" if m else name
-        split = "val" if "test" in name else "train"
-        prefixes[tag] = (os.path.join(raw_dir, name), split)
+        for folder in sorted(glob.glob(os.path.join(split_dir, "*")), key=_natural_key):
+            name = os.path.basename(folder)
+            if not os.path.isdir(folder) or "anomal" in name.lower():
+                continue
+            if not (os.path.isfile(os.path.join(folder, NORMALIZED_CSV))
+                    or os.path.isfile(os.path.join(folder, RAW_TABLES["detections"]))):
+                continue
+            tag = f"test_{name}" if split == "val" else name
+            prefixes[tag] = (folder, split)
     return prefixes
 
 
-def raw_files(prefix):
-    """Maps the raw table names to the Mountains file paths for one experiment file prefix."""
-    return {t: f"{prefix}_{t}.csv" for t in
-            ("drone_trajectories", "sensor_distances", "sensor_information", "detections")}
+def raw_files(folder):
+    """Maps the raw table names to the file paths for one experiment folder."""
+    return {t: os.path.join(folder, f) for t, f in RAW_TABLES.items()}
 
 
 def detect_uav_position_side(files, traj, n_rows=20000, tol_m=1e-3):
@@ -73,7 +101,7 @@ def detect_uav_position_side(files, traj, n_rows=20000, tol_m=1e-3):
     Returns "start" or "end": which trajectory position the detections at a timestamp were measured at.
 
     The original training data measures RSSI at the trajectory row's start_xyz (normalized_data.csv uses
-    start_xyz as the label), while the Mountains simulator measures it at end_xyz. The label must be the
+    start_xyz as the label), while e.g. the Mountains simulator measures it at end_xyz. The label must be the
     position where the RSSI was actually measured, so it is taken from the detections' drone_positions.
     """
     det = pd.read_csv(files["detections"], nrows=n_rows, usecols=["experiment_id", "timestamp", "drone_positions"])
@@ -145,6 +173,19 @@ def build_normalized_rows(files):
     return grid[COLUMNS]
 
 
+def load_normalized_rows(folder):
+    """Reads the folder's ready-made normalized_data.csv, or rebuilds the same rows from the raw tables."""
+    csv_path = os.path.join(folder, NORMALIZED_CSV)
+    if not os.path.isfile(csv_path):
+        print(f"    [*] No {NORMALIZED_CSV} - building rows from the raw tables")
+        return build_normalized_rows(raw_files(folder))
+    df = pd.read_csv(csv_path)
+    missing = [c for c in COLUMNS if c not in df.columns]
+    if missing:
+        raise ValueError(f"{csv_path} is missing columns: {missing}")
+    return df[COLUMNS]
+
+
 def to_experiment_blocks(df):
     """
     Groups rows per experiment exactly like build_dataset_cache.process_single_csv_to_cache:
@@ -178,11 +219,12 @@ def cache_paths(cache_dir, tag):
     return os.path.join(cache_dir, f"{tag}_data.npy"), os.path.join(cache_dir, f"{tag}_offsets.npy")
 
 
-def preprocess_all(raw_dir=RAW_DIR, cache_dir=CACHE_DIR, overwrite=False, save_csv=False):
-    """Preprocesses every non-anomaly raw file. Returns {'train': [(data, offsets), ...], 'val': [...]}"""
-    prefixes = find_raw_prefixes(raw_dir)
+def preprocess_all(train_dir=TRAIN_DIR, test_dir=TEST_DIR, cache_dir=CACHE_DIR, overwrite=False, save_csv=False):
+    """Preprocesses every non-anomaly file. Returns {'train': [(data, offsets), ...], 'val': [...]}"""
+    prefixes = find_raw_prefixes(train_dir, test_dir)
     if not prefixes:
-        raise FileNotFoundError(f"No raw *_detections.csv files found in {raw_dir}")
+        raise FileNotFoundError(f"No {NORMALIZED_CSV} / {RAW_TABLES['detections']} files found under "
+                                f"{train_dir}/* or {test_dir}/*")
 
     out = {"train": [], "val": []}
     for tag, (prefix, split) in prefixes.items():
@@ -196,8 +238,8 @@ def preprocess_all(raw_dir=RAW_DIR, cache_dir=CACHE_DIR, overwrite=False, save_c
             continue
 
         print(f"[*] Preprocessing {os.path.basename(prefix)} -> {split}/{tag}")
-        df = build_normalized_rows(raw_files(prefix))
-        if save_csv:
+        df = load_normalized_rows(prefix)
+        if save_csv and not os.path.isfile(os.path.join(prefix, NORMALIZED_CSV)):
             csv_dir = os.path.join(split_dir, tag)
             os.makedirs(csv_dir, exist_ok=True)
             df.to_csv(os.path.join(csv_dir, "normalized_data.csv"), index=False)
@@ -212,13 +254,15 @@ def preprocess_all(raw_dir=RAW_DIR, cache_dir=CACHE_DIR, overwrite=False, save_c
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Preprocess Mountains raw data into normalized experiment blocks.")
-    parser.add_argument("--raw_dir", default=RAW_DIR)
+    parser = argparse.ArgumentParser(description="Preprocess the clean data into normalized experiment blocks.")
+    parser.add_argument("--train_dir", default=TRAIN_DIR)
+    parser.add_argument("--test_dir", default=TEST_DIR)
     parser.add_argument("--cache_dir", default=CACHE_DIR)
     parser.add_argument("--overwrite", action="store_true")
-    parser.add_argument("--save_csv", action="store_true", help="Also write normalized_data.csv per file (large).")
+    parser.add_argument("--save_csv", action="store_true",
+                        help="Also write normalized_data.csv for folders rebuilt from raw tables (large).")
     args = parser.parse_args()
-    preprocess_all(args.raw_dir, args.cache_dir, overwrite=args.overwrite, save_csv=args.save_csv)
+    preprocess_all(args.train_dir, args.test_dir, args.cache_dir, overwrite=args.overwrite, save_csv=args.save_csv)
 
 
 if __name__ == "__main__":

@@ -52,3 +52,17 @@ scripts/fine-tuned-models/cache/
 scripts/fine-tuned-models/checkpoints/
 scripts/fine-tuned-models/outputs/
 *.npy
+
+# Split fine-tuning folders: caches / checkpoints / outputs / per-level runs stay local
+scripts/finetune_*/cache*/
+scripts/finetune_*/checkpoints/
+scripts/finetune_*/outputs/
+scripts/finetune_*/runs/
+
+# Final Tests (frozen evaluation bundle): keep code + result summaries only
+Final Tests/Datasets/*
+!Final Tests/Datasets/.gitkeep
+Final Tests/results/**/predictions_*.csv
+!Final Tests/results/all_summary.csv
+!Final Tests/results/pivot_*.csv
+!Final Tests/results/*/summary_*.csv
